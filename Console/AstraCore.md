@@ -1,4 +1,3 @@
-## 4) `docs/astracore.md`
 
 # AstraCore — Companion‑First AI Console
 
