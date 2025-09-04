@@ -239,6 +239,17 @@ impl Renderer {
             size: 1024 * 1024, // 1MB to start (grow if needed)
             usage: wgpu::BufferUsages::VERTEX | wgpu::BufferUsages::COPY_DST,
             mapped_at_creation: false,
+          
+        // after instance_buf creation
+        let mut weather = crate::effects::WeatherFx::new(&device, 800);
+            weather.set_kind(crate::effects::WeatherKind::None);
+
+Ok(Self {
+  // ...
+  // add:
+  weather,
+})
+
         });
 
         Ok(Self {
