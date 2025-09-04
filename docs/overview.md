@@ -1,111 +1,108 @@
-# Non-Dev Overview: What This Code Can Do (Today)
-
-This repo is a **working skeleton** of an AI-native game stack:
-
-- **AstraWeave (engine):** the rules-enforcer. AI proposes plans; the engine validates and executes them fairly (no cheating).
-- **AI Companions:** a teammate that can plan actions, follow your orders, and build a portable profile of what “works” with you.
-- **AI Boss Director:** “living boss brains” that reshape the battlefield (fortify, collapse bridges, spawn waves) within strict fairness budgets.
-- **Tooling:** persona packs, scripting for encounter design, local/remote AI planning, co-op networking, and a simple visual overlay.
-
-> You can **run all of this on PC right now**. The “console” piece (AstraCore) is a design target; today’s code is the PC dev kit that proves the gameplay loop.
+Here’s a crisp, executive‑level summary of what your **Veilweaver + AstraWeave** repo can do **right now**.
 
 ---
 
-## What You Can Do Right Now (No Game Dev Needed)
+## Vision at a Glance
 
-### ✅ 1) Watch an AI teammate make a plan and the engine enforce it
-- **Demo:** `hello_companion`
-- **What you’ll see:** The companion throws smoke, moves up, and lays down cover fire. If something’s not allowed (no path, blocked line-of-sight, ability on cooldown), the engine rejects it.
-- **Why it matters:** This is the core “AI proposes → engine validates” loop that keeps gameplay fair.
-
-### ✅ 2) See a boss change the arena on the fly
-- **Demo:** `adaptive_boss`
-- **What you’ll see:** The Boss Director chooses to **fortify**, **collapse**, or **spawn**. A small “budget” keeps it fair and readable, so bosses don’t cheat.
-- **Why it matters:** Every fight can feel fresh without breaking the rules.
-
-### ✅ 3) Experience multi-phase boss escalation with telegraphed “tells”
-- **Demo:** `phase_director`
-- **What you’ll see:** As the boss’s HP drops, it shifts phases (e.g., “Dreadwatch” → “Lashing Gale”), announces changes (telegraphs), and uses new tactics.
-- **Why it matters:** Bosses feel like living strategists, not scripted set pieces.
-
-### ✅ 4) Save your companion’s personality & memories as a portable file
-- **Demo:** `companion_profile`
-- **What you’ll see:** A `.cprof` file gets created with **persona**, **facts**, **episodes**, and **skills**, plus a content hash (“signature”) so you can verify integrity.
-- **Why it matters:** Your companion becomes **your** legacy—carry it between titles built on this engine.
-
-### ✅ 5) Load a “Persona Pack” from a ZIP and instantly reskin behavior
-- **Demo:** `persona_loader` (use a sample `sniper_persona.zip`)
-- **What you’ll see:** A `persona_manifest.toml` inside a ZIP turns into a ready-to-use `.cprof` with preferences, skills, and prefilled facts.
-- **Why it matters:** Creators/modders can share companions like “builds,” not just cosmetic skins.
-
-### ✅ 6) Author encounter budgets & hints with a tiny script (Rhai)
-- **Demo:** `rhai_authoring`
-- **What you’ll see:** A small script returns a **DirectorBudget** (how many fortifies/spawns/collapses) and **design hints** (e.g., “prefer bridge choke”), based on map size/difficulty.
-- **Why it matters:** Designers can tune fights without touching engine code.
-
-### ✅ 7) Let an external AI service produce action plans (safe & structured)
-- **Demo:** `llm_toolcall` (uses a mock; can be swapped for a local model)
-- **What you’ll see:** The AI outputs **strict JSON plans** (e.g., `MoveTo`, `Throw smoke`, `CoverFire`). The engine still validates everything.
-- **Why it matters:** You can plug in local or cloud AI later without risking exploits.
-
-### ✅ 8) Send snapshots over WebSocket and get back plans
-- **Demo:** `ipc_loopback`
-- **What you’ll see:** A tiny WebSocket “companion service” turns a world snapshot into a PlanIntent and sends it back—like a real game would do.
-- **Why it matters:** Swap between local, edge, or cloud AI by changing one endpoint.
-
-### ✅ 9) See a simple on-screen visualizer of the arena & the plan
-- **Demo:** `debug_overlay`
-- **What you’ll see:** A window drawing the grid, obstacles, Player/Companion/Enemy, and the planned actions.
-- **Why it matters:** Understand what the AI intends and how the engine will apply it.
-
-### ✅ 10) Try a tiny server-authoritative co-op loop
-- **Demo:** `coop_server` + `coop_client`
-- **What you’ll see:** The server owns the world. A client proposes an AI plan; the server validates and applies it, then broadcasts the updated state.
-- **Why it matters:** This is how we keep multiplayer honest—no client-side “magic.”
+* **AI‑native action RPG stack**: a working PC dev kit that proves the loop of *AI proposes → engine validates → world reacts*.
+* **Companions & bosses as first‑class systems**: persistent AI teammate profiles and adaptive boss “directors.”
+* **From ideas to running code**: rendering, physics, navigation, AI planning, authoring tools, IPC, and server‑authoritative co‑op demos.
 
 ---
 
-## What This Unlocks for Veilweaver (in plain language)
+## Engine Core (AstraWeave)
 
-- **A real teammate:** Your AI ally learns what works with you and follows your style—careful, aggressive, resource-minded, whatever.
-- **Bosses that adapt:** They fortify chokepoints, collapse bridges, or flank based on how you and your companion like to fight.
-- **Replayable, personal stories:** The same quest won’t play the same way twice, because your ally and the boss both change the situation.
-- **Creator ecosystem:** Personas and encounter scripts are files anyone can make and share—without breaking game balance.
+* **Deterministic simulation** with a clean ECS‑style world model.
+* **Tool‑sandbox contracts**: AI can only act via allowed verbs (e.g., `MoveTo`, `Throw`, `CoverFire`), and the engine enforces **cooldowns, LOS, and pathing**.
+* **Validation-first design** keeps AI fair (no cheating) in SP and MP.
 
 ---
 
-## How to Run Demos (quick guide)
+## 3D Rendering & Visuals
 
-> You’ll need Rust installed. From the repo root:
+* **wgpu‑based forward renderer** (windowed via winit): perspective camera, depth buffer, directional light, instanced drawing.
+* **Scene visualization**: ground plane + cubes for obstacles and entities (color‑coded: player/companion/enemy).
+* **Camera controller** (WASD + right‑mouse drag).
+* Example: `visual_3d` renders your grid/world in 3D.
 
-```bash
-# 1) Companion plan → engine validation loop
-cargo run -p hello_companion
+---
 
-# 2) Boss makes terrain moves within a fair budget
-cargo run -p adaptive_boss
+## 3D Physics & World Simulation
 
-# 3) Multi-phase boss with telegraphed shifts
-cargo run -p phase_director
+* **Rapier3D integration**: rigid bodies, colliders, joints, CCD, friction/restitution.
+* **Kinematic Character Controller** with states: **Grounded / Climbing / Swimming**.
+* **Ragdolls** (simple multi‑link body + spherical joints).
+* **Destructible objects**: impulse‑based damage → fracture into fragments.
+* **Water volumes** (buoyancy + drag) and **wind forces** (environmental dynamics).
+* Example: `physics_demo3d` (walk, climb, swim; wind, ragdolls, destructibles).
 
-# 4) Create and verify a portable companion profile
-cargo run -p companion_profile
+---
 
-# 5) Load a persona ZIP → .cprof (have sniper_persona.zip ready)
-cargo run -p persona_loader
+## Navigation (Navmesh & Pathfinding)
 
-# 6) Author encounter budgets & hints with a tiny script
-cargo run -p rhai_authoring
+* **Lightweight navmesh bake** from triangles with **slope filtering** and triangle adjacency.
+* **A\* over triangle centers** + basic smoothing for waypoints; suitable for uneven terrain and ramps.
+* Example: `navmesh_demo` (bake, path, visualize).
 
-# 7) External AI (mock) makes a JSON plan
-cargo run -p llm_toolcall
+---
 
-# 8) WebSocket: send a snapshot, get back a plan
-cargo run -p ipc_loopback
+## AI Planning & Companions
 
-# 9) See the plan & arena in a simple window
-cargo run -p debug_overlay
+* **Rule‑based orchestrator** for quick, deterministic plans.
+* **LLM tool‑calling scaffold**: prompt → strict JSON `PlanIntent` (mock client provided; ready for local/edge model binding).
+* **Companion Profiles (`.cprof`)**: persona + facts + episodes + skills, with simple content‑hash verification and **distillation** (episodes → facts).
+* **Persona Packs**: ZIP + `persona_manifest.toml` → instant companion behavior/profile.
+* Examples: `hello_companion`, `llm_toolcall`, `companion_profile`, `persona_loader`.
 
-# 10) Server-authoritative co-op (start server, then a client)
-cargo run -p coop_server
-cargo run -p coop_client
+---
+
+## Adaptive Boss Systems
+
+* **Boss Director v0**: terrain ops (**Fortify**, **Collapse**) and **SpawnWave**, with **budgets** for fairness/readability.
+* **Phase Machine**: multi‑phase escalation driven by HP/time with **telegraphed “tells.”**
+* Examples: `adaptive_boss`, `phase_director`.
+
+---
+
+## Authoring & Debug Tools
+
+* **Rhai scripting**: per‑encounter **DirectorBudget** and **design hints** without recompiling.
+* **egui overlay**: simple plan/arena visualization for debugging (separate from the 3D renderer).
+* Example: `rhai_authoring`, `debug_overlay`.
+
+---
+
+## IPC & Networking
+
+* **WebSocket IPC**: send `WorldSnapshot`, receive `PlanIntent` (swap local/edge AI by changing the endpoint).
+* **Server‑authoritative co‑op**: the server owns the world; clients propose intents; server validates and broadcasts state.
+* Examples: `ipc_loopback`, `coop_server`, `coop_client`.
+
+---
+
+## What This Enables Today
+
+* Build a **playable vertical slice** where:
+
+  * Your **AI companion** plans moves and the engine enforces rules.
+  * **Bosses** adapt arenas and tactics across phases.
+  * A **character** traverses a 3D world with **climb/swim** states, interacts with **physics**, and navigates **walkable terrain**.
+* **Creators** can ship persona packs, encounter scripts, and prototype levels **without touching engine code**.
+* **Teams** can plug in local or remote AI later; the **validation layer** keeps it fair in SP/MP.
+
+---
+
+## Included Examples (high‑level)
+
+* **AI loop**: `hello_companion`, `llm_toolcall`, `ipc_loopback`
+* **Boss behavior**: `adaptive_boss`, `phase_director`
+* **Companion data**: `companion_profile`, `persona_loader`
+* **Authoring/Debug**: `rhai_authoring`, `debug_overlay`
+* **3D systems**: `visual_3d`, `physics_demo3d`, `navmesh_demo`
+* **Networking**: `coop_server`, `coop_client`
+
+---
+
+### TL;DR
+
+You now have a **cohesive AI‑native game stack**: real‑time 3D rendering, physics and character movement, navmesh pathfinding, AI companion/boss planning with safety rails, authoring tools, and server‑authoritative co‑op — all runnable today as a foundation for **Veilweaver** and future titles built on **AstraWeave**.
