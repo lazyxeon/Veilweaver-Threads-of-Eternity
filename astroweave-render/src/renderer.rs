@@ -292,6 +292,11 @@ Ok(Self {
         self.queue.write_buffer(&self.instance_buf, 0, bytemuck::cast_slice(&raws));
     }
 
+    pub fn set_weather(&mut self, kind: crate::effects::WeatherKind) { self.weather.set_kind(kind); }
+
+    pub fn tick_weather(&mut self, dt: f32) { self.weather.update(&self.queue, dt); }
+
+
     pub fn render(&mut self) -> Result<()> {
         let frame = self.surface.get_current_texture()?;
         let view = frame.texture.create_view(&wgpu::TextureViewDescriptor::default());
