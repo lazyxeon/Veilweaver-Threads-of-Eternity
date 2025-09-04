@@ -201,6 +201,10 @@ impl Renderer {
             multiview: None,
             cache: None,
         });
+        
+      let overlay = crate::overlay::OverlayFx::new(&device, format);
+
+      let overlay_params = crate::overlay::OverlayParams { fade: 0.0, letterbox: 0.0, _pad: [0.0;2] };
 
         // Meshes
         let (cube_v, cube_i) = primitives::cube();
