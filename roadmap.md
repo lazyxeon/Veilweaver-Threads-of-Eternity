@@ -13,7 +13,7 @@
    * The fate‑weaving mechanic is described in docs but not coded. Core gameplay loops like crafting, combat combos, echo infusion, resource harvesting and the consequences of “thread weaving” need to be implemented.
    * Story content (quests, dialogue, characters, cutscenes) and level design (biomes, puzzles, dungeons) are missing. A narrative writer and level designer are needed to build the 100+ hour experience promised by the concept.
 
-4. **Audio and Dialogue Systems**
+✅4. **Audio and Dialogue Systems**
 
    * The engine doesn’t handle audio. Support for background music, spatial sound effects, voice‑over playback and procedural dialogue needs to be added.
    * AI‑driven companion banter will require text‑to‑speech or recorded voice lines, and a dialogue system to manage timing and variation.
