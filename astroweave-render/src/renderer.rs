@@ -355,6 +355,22 @@ Ok(Self {
     }
 }
 
+// after drawing 3D content:
+self.overlay.update(&self.queue, &self.overlay_params);
+rp.set_pipeline(&self.pipeline); // ensure a renderpass is open; if you closed it, open a new with same color attachment and no depth.
+drop(rp); // close previous
+let mut rp2 = enc.begin_render_pass(&wgpu::RenderPassDescriptor {
+    label: Some("overlay pass"),
+    color_attachments: &[Some(wgpu::RenderPassColorAttachment {
+        view: &view, resolve_target: None,
+        ops: wgpu::Operations { load: wgpu::LoadOp::Load, store: true }
+    })],
+    depth_stencil_attachment: None,
+    timestamp_writes: None, occlusion_query_set: None,
+});
+self.overlay.draw(&mut rp2);
+drop(rp2);
+
 pub struct Renderer {
   // existing …
   overlay: crate::overlay::OverlayFx,
