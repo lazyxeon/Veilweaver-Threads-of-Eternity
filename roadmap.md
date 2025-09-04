@@ -8,7 +8,7 @@
    * The prototype uses a simple 2D grid for pathing and line‑of‑sight. A full action RPG requires a 3D physics engine (collision, rigid bodies, joints, ragdolls, kinematics) and navmesh/pathfinding suitable for complex terrain.
    * Systems such as climbing, swimming, destructible objects, and dynamic weather aren’t implemented.
 
-3. **Gameplay Mechanics and Content**
+✅3. **Gameplay Mechanics and Content**
 
    * The fate‑weaving mechanic is described in docs but not coded. Core gameplay loops like crafting, combat combos, echo infusion, resource harvesting and the consequences of “thread weaving” need to be implemented.
    * Story content (quests, dialogue, characters, cutscenes) and level design (biomes, puzzles, dungeons) are missing. A narrative writer and level designer are needed to build the 100+ hour experience promised by the concept.
