@@ -350,3 +350,10 @@ Ok(Self {
         Ok(())
     }
 }
+
+pub struct Renderer {
+  // existing …
+  overlay: crate::overlay::OverlayFx,
+  pub overlay_params: crate::overlay::OverlayParams,
+  pub weather: crate::effects::WeatherFx,
+}
