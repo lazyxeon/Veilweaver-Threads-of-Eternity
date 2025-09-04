@@ -1,9 +1,9 @@
-1. **3D Rendering and Visual Assets**
+✅1. **3D Rendering and Visual Assets**
 
    * The current engine is console/log–based; there’s no graphics subsystem. You would need a rendering pipeline (e.g. wgpu or vulkan integration) with scene graph, mesh loading, shaders, animation playback and UI widgets.
    * No art assets exist yet: character models, environments, props, visual effects, and UI art need to be created or sourced.
 
-2. **Physics and World Simulation**
+✅2. **Physics and World Simulation**
 
    * The prototype uses a simple 2D grid for pathing and line‑of‑sight. A full action RPG requires a 3D physics engine (collision, rigid bodies, joints, ragdolls, kinematics) and navmesh/pathfinding suitable for complex terrain.
    * Systems such as climbing, swimming, destructible objects, and dynamic weather aren’t implemented.
