@@ -377,3 +377,45 @@ pub struct Renderer {
   pub overlay_params: crate::overlay::OverlayParams,
   pub weather: crate::effects::WeatherFx,
 }
+
+impl Renderer {
+    /// Call this if you want to draw additional passes (e.g., UI) after the 3D scene.
+    pub fn render_with<F>(&mut self, ui_draw: F) -> anyhow::Result<()>
+    where F: FnOnce(&wgpu::TextureView, &mut wgpu::CommandEncoder, &wgpu::Device, &wgpu::Queue, (u32,u32))
+    {
+        let frame = self.surface.get_current_texture()?;
+        let view = frame.texture.create_view(&wgpu::TextureViewDescriptor::default());
+        let mut enc = self.device.create_command_encoder(&wgpu::CommandEncoderDescriptor{ label: Some("encoder ui") });
+
+        // --- your existing 3D pass (copy from render()) ---
+        {
+            let mut rp = enc.begin_render_pass(&wgpu::RenderPassDescriptor {
+                label: Some("main pass"),
+                color_attachments: &[Some(wgpu::RenderPassColorAttachment {
+                    view: &view, resolve_target: None,
+                    ops: wgpu::Operations{ load: wgpu::LoadOp::Clear(wgpu::Color{ r:0.05, g:0.07, b:0.10, a:1.0 }), store: true }
+                })],
+                depth_stencil_attachment: Some(wgpu::RenderPassDepthStencilAttachment {
+                    view: &self.depth.view,
+                    depth_ops: Some(wgpu::Operations { load: wgpu::LoadOp::Clear(1.0), store: true }),
+                    stencil_ops: None,
+                }),
+                timestamp_writes: None, occlusion_query_set: None,
+            });
+            rp.set_pipeline(&self.pipeline);
+            rp.set_bind_group(0, &self.camera_bind_group, &[]);
+            // draw ground + instances (same as render())
+            // ...
+        } // drop rp
+
+        // --- UI draw callback ---
+        ui_draw(&view, &mut enc, &self.device, &self.queue, (self.config.width, self.config.height));
+
+        self.queue.submit(Some(enc.finish()));
+        frame.present();
+        Ok(())
+    }
+
+    pub fn surface_size(&self) -> (u32,u32) { (self.config.width, self.config.height) }
+}
+
