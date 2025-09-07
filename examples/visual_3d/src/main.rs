@@ -1,12 +1,12 @@
 use astraweave_core::{IVec2, Team, World};
 use astraweave_render::{Camera, CameraController, Instance, Renderer};
-use glam::{vec3, Mat4, Vec2, Vec3};
-use std::time::Instant;
+use glam::{vec3, Vec2};
+use std::{sync::Arc, time::Instant};
 use winit::{
     dpi::PhysicalSize,
     event::{ElementState, Event, KeyEvent, WindowEvent},
-    event_loop::{ControlFlow, EventLoop},
-    keyboard::{KeyCode, PhysicalKey},
+    event_loop::EventLoop,
+    keyboard::PhysicalKey,
 };
 
 fn world_to_instances(world: &World, scale: f32) -> Vec<Instance> {
@@ -53,10 +53,12 @@ fn world_to_instances(world: &World, scale: f32) -> Vec<Instance> {
 
 fn main() -> anyhow::Result<()> {
     let event_loop = EventLoop::new()?;
-    let window = winit::window::WindowBuilder::new()
-        .with_title("Veilweaver 3D")
-        .with_inner_size(PhysicalSize::new(1280, 720))
-        .build(&event_loop)?;
+    let window = Arc::new(
+        winit::window::WindowBuilder::new()
+            .with_title("Veilweaver 3D")
+            .with_inner_size(PhysicalSize::new(1280, 720))
+            .build(&event_loop)?,
+    );
 
     // Build a small demo world
     let mut world = World::new();
@@ -67,7 +69,7 @@ fn main() -> anyhow::Result<()> {
     let comp = world.spawn("Companion", IVec2 { x: 3, y: 2 }, Team { id: 1 }, 80, 30);
     let enemy = world.spawn("Enemy", IVec2 { x: 12, y: 2 }, Team { id: 2 }, 60, 0);
 
-    let mut renderer = pollster::block_on(Renderer::new(&window))?;
+    let mut renderer = pollster::block_on(Renderer::new(window.clone()))?;
 
     let mut camera = Camera {
         position: vec3(0.0, 8.0, 12.0),
@@ -133,7 +135,5 @@ fn main() -> anyhow::Result<()> {
             }
             _ => {}
         }
-    })?;
-    // (never reached)
-    // Ok(())
+    }).map_err(|e| anyhow::anyhow!("Event loop error: {}", e))
 }
