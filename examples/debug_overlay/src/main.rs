@@ -118,9 +118,9 @@ impl eframe::App for App {
                         ActionStep::MoveTo { x, y } => {
                             let nxt = IVec2 { x: *x, y: *y };
                             shapes.push(egui::Shape::line_segment(
-                            [to_screen(cur), to_screen(nxt)],
-                             egui::Stroke::new(2.0, egui::Color32::YELLOW),
-                        ));
+                                [to_screen(cur), to_screen(nxt)],
+                                egui::Stroke::new(2.0, egui::Color32::YELLOW),
+                            ));
 
                             cur = nxt;
                         }

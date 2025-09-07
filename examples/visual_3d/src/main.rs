@@ -88,52 +88,54 @@ fn main() -> anyhow::Result<()> {
 
     let mut last = Instant::now();
 
-    event_loop.run(move |event, elwt| {
-        match event {
-            Event::WindowEvent { event, .. } => match event {
-                WindowEvent::Resized(size) => {
-                    renderer.resize(size.width, size.height);
-                    camera.aspect = (size.width as f32 / size.height.max(1) as f32).max(0.1);
-                }
-                WindowEvent::CloseRequested => elwt.exit(),
-                WindowEvent::KeyboardInput {
-                    event:
-                        KeyEvent {
-                            state,
-                            physical_key: PhysicalKey::Code(code),
-                            ..
-                        },
-                    ..
-                } => {
-                    let pressed = state == ElementState::Pressed;
-                    controller.process_keyboard(code, pressed);
-                }
-                WindowEvent::MouseInput { state, button, .. } => {
-                    controller.process_mouse_button(button, state == ElementState::Pressed);
-                }
-                WindowEvent::CursorMoved { position, .. } => {
-                    controller.process_mouse_move(
-                        &mut camera,
-                        Vec2::new(position.x as f32, position.y as f32),
-                    );
+    event_loop
+        .run(move |event, elwt| {
+            match event {
+                Event::WindowEvent { event, .. } => match event {
+                    WindowEvent::Resized(size) => {
+                        renderer.resize(size.width, size.height);
+                        camera.aspect = (size.width as f32 / size.height.max(1) as f32).max(0.1);
+                    }
+                    WindowEvent::CloseRequested => elwt.exit(),
+                    WindowEvent::KeyboardInput {
+                        event:
+                            KeyEvent {
+                                state,
+                                physical_key: PhysicalKey::Code(code),
+                                ..
+                            },
+                        ..
+                    } => {
+                        let pressed = state == ElementState::Pressed;
+                        controller.process_keyboard(code, pressed);
+                    }
+                    WindowEvent::MouseInput { state, button, .. } => {
+                        controller.process_mouse_button(button, state == ElementState::Pressed);
+                    }
+                    WindowEvent::CursorMoved { position, .. } => {
+                        controller.process_mouse_move(
+                            &mut camera,
+                            Vec2::new(position.x as f32, position.y as f32),
+                        );
+                    }
+                    _ => {}
+                },
+                Event::AboutToWait => {
+                    // update
+                    let now = Instant::now();
+                    let dt = (now - last).as_secs_f32();
+                    last = now;
+                    controller.update_camera(&mut camera, dt);
+                    renderer.update_camera(&camera);
+                    // render
+                    if let Err(e) = renderer.render() {
+                        eprintln!("render error: {e:?}");
+                    }
+                    // request next frame
+                    window.request_redraw();
                 }
                 _ => {}
-            },
-            Event::AboutToWait => {
-                // update
-                let now = Instant::now();
-                let dt = (now - last).as_secs_f32();
-                last = now;
-                controller.update_camera(&mut camera, dt);
-                renderer.update_camera(&camera);
-                // render
-                if let Err(e) = renderer.render() {
-                    eprintln!("render error: {e:?}");
-                }
-                // request next frame
-                window.request_redraw();
             }
-            _ => {}
-        }
-    }).map_err(|e| anyhow::anyhow!("Event loop error: {}", e))
+        })
+        .map_err(|e| anyhow::anyhow!("Event loop error: {}", e))
 }
