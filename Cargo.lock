@@ -363,6 +363,7 @@ name = "astraweave-input"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "criterion",
  "gilrs",
  "glam",
  "serde",
