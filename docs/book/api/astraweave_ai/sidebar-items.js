@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"struct":["RuleOrchestrator"],"trait":["Orchestrator"]};

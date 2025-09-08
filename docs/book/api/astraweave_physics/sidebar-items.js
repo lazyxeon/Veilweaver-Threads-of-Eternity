@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["ActorKind","CharState"],"struct":["CharacterController","Layers","PhysicsWorld"],"type":["BodyId"]};

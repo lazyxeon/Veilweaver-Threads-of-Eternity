@@ -1,1 +1,0 @@
-searchState.loadedDescShard("astraweave_ai", 0, "Minimal rule-based orchestrator: If enemy in LOS-ish and …\nReturns the argument unchanged.\nCalls <code>U::from(self)</code>.")
