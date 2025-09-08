@@ -190,12 +190,13 @@ cargo audit --ignore RUSTSEC-2020-0071 || true
 
 ### Expected Improvements:
 
-1. **Initial Build**: 15-20% faster due to optimized dependencies
-2. **Incremental Builds**: 50-70% faster with sccache
-3. **Cache Hits**: 80-90% faster when cache is warm
-4. **Test Execution**: 30-50% faster with nextest
-5. **CI Job Count**: 40% reduction in total jobs
+> **Note:** The following improvements are estimates based on typical project experience and configuration. Actual results may vary depending on project size, hardware, and CI environment.
 
+1. **Initial Build**: Estimated 15-20% faster due to optimized dependencies
+2. **Incremental Builds**: Estimated 50-70% faster with sccache
+3. **Cache Hits**: Estimated 80-90% faster when cache is warm
+4. **Test Execution**: Estimated 30-50% faster with nextest
+5. **CI Job Count**: Estimated 40% reduction in total jobs
 ### Cache Storage:
 
 - **Before**: ~500MB per configuration
