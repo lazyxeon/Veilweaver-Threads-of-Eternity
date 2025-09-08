@@ -28,7 +28,7 @@
 [![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)](https://github.com/lazyxeon/Veilweaver-Threads-of-Eternity/blob/main/CONTRIBUTING.md)
 
 ## Project Focus
-[![AI-Native](https://img.shields.io/badge/AI--Native-Game%20Engine-purple.svg)](#ai‑native-engine-astraweave--deterministic-ecs‑style-simulation-with-strict-tool‑sandboxing-for)
+[![AI-Native](https://img.shields.io/badge/AI--Native-Game%20Engine-purple.svg)](#project-focus)
 [![Game Engine](https://img.shields.io/badge/Game%20Engine-3D%20RPG-darkgreen.svg)](#-directory-structure)
 [![Research Platform](https://img.shields.io/badge/Research-Platform-orange.svg)](#veilweaver-threads-of-eternity)
 [![Rust Ecosystem](https://img.shields.io/badge/ecosystem-wgpu%20%7C%20rapier3d%20%7C%20rodio-brown.svg)](#development-environment)
