@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1757366774773,
+  "lastUpdate": 1757367141999,
   "repoUrl": "https://github.com/lazyxeon/Veilweaver-Threads-of-Eternity",
   "entries": {
     "Rust Benchmark": [
@@ -65,6 +65,68 @@ window.BENCHMARK_DATA = {
             "name": "binding_set_creation",
             "value": 674,
             "range": "± 2",
+            "unit": "ns/iter"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "lazyxeon",
+            "username": "lazyxeon"
+          },
+          "committer": {
+            "name": "lazyxeon",
+            "username": "lazyxeon"
+          },
+          "id": "5476d14e0cf260e45eb64def2f6b9defd598046c",
+          "message": "Fix failing benchmark workflow by handling missing gh-pages branch and improving error handling",
+          "timestamp": "2025-09-08T21:13:44Z",
+          "url": "https://github.com/lazyxeon/Veilweaver-Threads-of-Eternity/pull/24/commits/5476d14e0cf260e45eb64def2f6b9defd598046c"
+        },
+        "date": 1757367141541,
+        "tool": "cargo",
+        "benches": [
+          {
+            "name": "world_creation",
+            "value": 74,
+            "range": "± 0",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "entity_spawning",
+            "value": 31559,
+            "range": "± 1217",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "world_tick",
+            "value": 51,
+            "range": "± 0",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "binding_creation",
+            "value": 3,
+            "range": "± 0",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "binding_serialization",
+            "value": 69,
+            "range": "± 1",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "binding_deserialization",
+            "value": 134,
+            "range": "± 1",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "binding_set_creation",
+            "value": 691,
+            "range": "± 1",
             "unit": "ns/iter"
           }
         ]
