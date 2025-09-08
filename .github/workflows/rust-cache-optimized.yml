@@ -320,9 +320,23 @@ jobs:
     steps:
       - name: Check CI status
         run: |
-          if [[ "${{ needs.cache-strategy.result }}" == "success" && 
-                ("${{ needs.cache-warming.result }}" == "success" || "${{ needs.cache-warming.result }}" == "skipped") &&
-                ("${{ needs.cross-compile.result }}" == "success" || "${{ needs.cross-compile.result }}" == "skipped") ]]; then
+          cache_strategy_ok=false
+          cache_warming_ok=false
+          cross_compile_ok=false
+
+          if [[ "${{ needs.cache-strategy.result }}" == "success" ]]; then
+            cache_strategy_ok=true
+          fi
+
+          if [[ "${{ needs.cache-warming.result }}" == "success" || "${{ needs.cache-warming.result }}" == "skipped" ]]; then
+            cache_warming_ok=true
+          fi
+
+          if [[ "${{ needs.cross-compile.result }}" == "success" || "${{ needs.cross-compile.result }}" == "skipped" ]]; then
+            cross_compile_ok=true
+          fi
+
+          if [[ "$cache_strategy_ok" == "true" && "$cache_warming_ok" == "true" && "$cross_compile_ok" == "true" ]]; then
             echo "✅ CI pipeline completed successfully!"
             exit 0
           else
