@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1757367141999,
+  "lastUpdate": 1757367815295,
   "repoUrl": "https://github.com/lazyxeon/Veilweaver-Threads-of-Eternity",
   "entries": {
     "Rust Benchmark": [
@@ -127,6 +127,68 @@ window.BENCHMARK_DATA = {
             "name": "binding_set_creation",
             "value": 691,
             "range": "± 1",
+            "unit": "ns/iter"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "lazyxeon",
+            "username": "lazyxeon"
+          },
+          "committer": {
+            "name": "lazyxeon",
+            "username": "lazyxeon"
+          },
+          "id": "053a52eb8600f00b1df0bfcb7bcddaafb0b897e6",
+          "message": "[WIP] please analyze and develop a bespoke rust toolchain and rust cache workflows for my repo",
+          "timestamp": "2025-09-08T21:14:11Z",
+          "url": "https://github.com/lazyxeon/Veilweaver-Threads-of-Eternity/pull/29/commits/053a52eb8600f00b1df0bfcb7bcddaafb0b897e6"
+        },
+        "date": 1757367814666,
+        "tool": "cargo",
+        "benches": [
+          {
+            "name": "world_creation",
+            "value": 74,
+            "range": "± 0",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "entity_spawning",
+            "value": 31173,
+            "range": "± 150",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "world_tick",
+            "value": 51,
+            "range": "± 0",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "binding_creation",
+            "value": 3,
+            "range": "± 0",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "binding_serialization",
+            "value": 69,
+            "range": "± 0",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "binding_deserialization",
+            "value": 128,
+            "range": "± 0",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "binding_set_creation",
+            "value": 673,
+            "range": "± 5",
             "unit": "ns/iter"
           }
         ]
