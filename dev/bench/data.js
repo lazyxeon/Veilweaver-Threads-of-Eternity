@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1757370807178,
+  "lastUpdate": 1757370964707,
   "repoUrl": "https://github.com/lazyxeon/Veilweaver-Threads-of-Eternity",
   "entries": {
     "Rust Benchmark": [
@@ -65,6 +65,68 @@ window.BENCHMARK_DATA = {
             "name": "binding_set_creation",
             "value": 673,
             "range": "± 8",
+            "unit": "ns/iter"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "lazyxeon",
+            "username": "lazyxeon"
+          },
+          "committer": {
+            "name": "lazyxeon",
+            "username": "lazyxeon"
+          },
+          "id": "f1407a2f55226d6686251ee6b2f439d27b8152a4",
+          "message": "[WIP] please analyze and develop a bespoke readme for my repo that makes it clear the repo is a Ai native gaming engine named astraweave, and veilweavers is a demo game concept. as well as aligns with best practices standards for a video game engine repo readme",
+          "timestamp": "2025-09-08T22:07:38Z",
+          "url": "https://github.com/lazyxeon/Veilweaver-Threads-of-Eternity/pull/31/commits/f1407a2f55226d6686251ee6b2f439d27b8152a4"
+        },
+        "date": 1757370963352,
+        "tool": "cargo",
+        "benches": [
+          {
+            "name": "world_creation",
+            "value": 56,
+            "range": "± 0",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "entity_spawning",
+            "value": 23545,
+            "range": "± 121",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "world_tick",
+            "value": 48,
+            "range": "± 0",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "binding_creation",
+            "value": 3,
+            "range": "± 0",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "binding_serialization",
+            "value": 66,
+            "range": "± 0",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "binding_deserialization",
+            "value": 97,
+            "range": "± 0",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "binding_set_creation",
+            "value": 673,
+            "range": "± 7",
             "unit": "ns/iter"
           }
         ]
