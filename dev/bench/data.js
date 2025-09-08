@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1757369591248,
+  "lastUpdate": 1757369896137,
   "repoUrl": "https://github.com/lazyxeon/Veilweaver-Threads-of-Eternity",
   "entries": {
     "Rust Benchmark": [
@@ -185,6 +185,72 @@ window.BENCHMARK_DATA = {
             "name": "binding_set_creation",
             "value": 676,
             "range": "± 2",
+            "unit": "ns/iter"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "198982749+Copilot@users.noreply.github.com",
+            "name": "Copilot",
+            "username": "Copilot"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4ce3c4b93beec4d5d68892e7b0338f4be4a2c88a",
+          "message": "Add comprehensive bespoke badge collection to README (#30)\n\n* Initial plan\n\n* Add comprehensive bespoke badge collection to README\n\nCo-authored-by: lazyxeon <79929721+lazyxeon@users.noreply.github.com>\n\n* Update README.md\n\nCo-authored-by: Copilot <175728472+Copilot@users.noreply.github.com>\n\n* Update README.md\n\nCo-authored-by: Copilot <175728472+Copilot@users.noreply.github.com>\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>\nCo-authored-by: lazyxeon <79929721+lazyxeon@users.noreply.github.com>\nCo-authored-by: Copilot <175728472+Copilot@users.noreply.github.com>",
+          "timestamp": "2025-09-08T18:07:33-04:00",
+          "tree_id": "3e68546570cc5a1473aab65cefb982d9c3783640",
+          "url": "https://github.com/lazyxeon/Veilweaver-Threads-of-Eternity/commit/4ce3c4b93beec4d5d68892e7b0338f4be4a2c88a"
+        },
+        "date": 1757369894937,
+        "tool": "cargo",
+        "benches": [
+          {
+            "name": "world_creation",
+            "value": 56,
+            "range": "± 0",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "entity_spawning",
+            "value": 23719,
+            "range": "± 236",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "world_tick",
+            "value": 48,
+            "range": "± 0",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "binding_creation",
+            "value": 3,
+            "range": "± 0",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "binding_serialization",
+            "value": 64,
+            "range": "± 1",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "binding_deserialization",
+            "value": 96,
+            "range": "± 0",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "binding_set_creation",
+            "value": 676,
+            "range": "± 1",
             "unit": "ns/iter"
           }
         ]
