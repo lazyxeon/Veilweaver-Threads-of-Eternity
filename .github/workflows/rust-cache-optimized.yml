@@ -283,5 +283,3 @@ jobs:
             -p astraweave-physics \
             -p astraweave-nav || true  # Allow failures for experimental targets
 
-            #[allow(unused_variables)]
-              let my_var = ...;
