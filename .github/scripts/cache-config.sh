@@ -4,15 +4,14 @@
 # sccache configuration
 export SCCACHE_CACHE_SIZE="10G"
 export SCCACHE_DIR="./target/sccache"
-export RUSTC_WRAPPER="sccache"
+# RUSTC_WRAPPER will be set by init_sccache function
 
 # Cargo environment variables for optimal caching
 export CARGO_INCREMENTAL=0
 export CARGO_NET_RETRY=10
 export CARGO_NET_TIMEOUT=30
 
-# Build parallelism
-export CARGO_BUILD_JOBS=0  # Use all available cores
+# Build parallelism - use system default for job count
 
 # Cache directories that should be preserved
 CACHE_DIRECTORIES=(
@@ -76,10 +75,12 @@ esac
 init_sccache() {
     if command -v sccache > /dev/null 2>&1; then
         echo "Starting sccache server..."
+        export RUSTC_WRAPPER=sccache
         sccache --start-server
         sccache --show-stats
     else
-        echo "sccache not found, skipping..."
+        echo "sccache not found, using standard rustc..."
+        unset RUSTC_WRAPPER
     fi
 }
 

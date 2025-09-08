@@ -4,8 +4,9 @@ rustflags = ["-C", "debuginfo=0"]
 # Parallel compilation - removed jobs = 0 as it's invalid
 
 [target.'cfg(all())']
-# Enable sccache for faster compilation in CI and local development
-rustc-wrapper = "sccache"
+# Enable sccache for faster compilation (if available)
+# Uncomment when sccache is installed:
+# rustc-wrapper = "sccache"
 
 [term]
 color = "always"
