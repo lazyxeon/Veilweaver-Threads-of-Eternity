@@ -62,6 +62,7 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
         with:
           components: rustfmt
+          
       - name: Format check - Core Components
         run: |
           cargo fmt --check \
