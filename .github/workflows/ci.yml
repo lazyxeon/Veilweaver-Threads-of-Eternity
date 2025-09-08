@@ -68,8 +68,6 @@ jobs:
             --exclude ui_controls_demo \
             --exclude npc_town_demo \
             --exclude rhai_authoring --exclude cutscene_render_demo --exclude weaving_playground --exclude combat_physics_demo --exclude navmesh_demo --exclude physics_demo3d \
-            --exclude cutscene_render_demo \
-            --exclude weaving_playground
 
   build:
     name: Build (${{ matrix.os }})
