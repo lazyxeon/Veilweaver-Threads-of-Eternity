@@ -1,6 +1,6 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1757370996934,
-  "repoUrl": "https://github.com/lazyxeon/Veilweaver-Threads-of-Eternity",
+  "lastUpdate": 1757371362589,
+  "repoUrl": "https://github.com/lazyxeon/AstraWeave-AI-Native-Gaming-Engine",
   "entries": {
     "Rust Benchmark": [
       {
@@ -189,6 +189,72 @@ window.BENCHMARK_DATA = {
             "name": "binding_set_creation",
             "value": 678,
             "range": "± 0",
+            "unit": "ns/iter"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "79929721+lazyxeon@users.noreply.github.com",
+            "name": "Pheonetic Coder",
+            "username": "lazyxeon"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "697d9520708476381f7ebcb08b2c68248cda0e30",
+          "message": "Add variable declaration in rust-cache-optimized.yml (#32)\n\n* Add variable declaration in rust-cache-optimized.yml\n\nAdded a new variable declaration for future use.\n\n* Update .github/workflows/rust-cache-optimized.yml\n\nCo-authored-by: Copilot <175728472+Copilot@users.noreply.github.com>\n\n---------\n\nCo-authored-by: Copilot <175728472+Copilot@users.noreply.github.com>",
+          "timestamp": "2025-09-08T18:36:34-04:00",
+          "tree_id": "ac1e290509c6523c3da37c17d191540b1018f628",
+          "url": "https://github.com/lazyxeon/AstraWeave-AI-Native-Gaming-Engine/commit/697d9520708476381f7ebcb08b2c68248cda0e30"
+        },
+        "date": 1757371362132,
+        "tool": "cargo",
+        "benches": [
+          {
+            "name": "world_creation",
+            "value": 56,
+            "range": "± 0",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "entity_spawning",
+            "value": 23429,
+            "range": "± 79",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "world_tick",
+            "value": 48,
+            "range": "± 0",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "binding_creation",
+            "value": 3,
+            "range": "± 0",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "binding_serialization",
+            "value": 66,
+            "range": "± 0",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "binding_deserialization",
+            "value": 97,
+            "range": "± 0",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "binding_set_creation",
+            "value": 679,
+            "range": "± 1",
             "unit": "ns/iter"
           }
         ]
