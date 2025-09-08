@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1757369543939,
+  "lastUpdate": 1757369591248,
   "repoUrl": "https://github.com/lazyxeon/Veilweaver-Threads-of-Eternity",
   "entries": {
     "Rust Benchmark": [
@@ -123,6 +123,68 @@ window.BENCHMARK_DATA = {
             "name": "binding_set_creation",
             "value": 675,
             "range": "± 1",
+            "unit": "ns/iter"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "lazyxeon",
+            "username": "lazyxeon"
+          },
+          "committer": {
+            "name": "lazyxeon",
+            "username": "lazyxeon"
+          },
+          "id": "c7dd7d7e389cae32ab7caa113ed36450a499c314",
+          "message": "Add comprehensive bespoke badge collection to README",
+          "timestamp": "2025-09-08T21:52:22Z",
+          "url": "https://github.com/lazyxeon/Veilweaver-Threads-of-Eternity/pull/30/commits/c7dd7d7e389cae32ab7caa113ed36450a499c314"
+        },
+        "date": 1757369590616,
+        "tool": "cargo",
+        "benches": [
+          {
+            "name": "world_creation",
+            "value": 56,
+            "range": "± 0",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "entity_spawning",
+            "value": 23399,
+            "range": "± 64",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "world_tick",
+            "value": 48,
+            "range": "± 0",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "binding_creation",
+            "value": 3,
+            "range": "± 0",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "binding_serialization",
+            "value": 64,
+            "range": "± 1",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "binding_deserialization",
+            "value": 97,
+            "range": "± 0",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "binding_set_creation",
+            "value": 676,
+            "range": "± 2",
             "unit": "ns/iter"
           }
         ]
