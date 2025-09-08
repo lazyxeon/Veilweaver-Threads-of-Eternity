@@ -12,8 +12,6 @@ on:
 
 permissions:
   contents: read
-  security-events: write
-  id-token: write # Required for requesting the JWT
 
 jobs:
   scorecard:
