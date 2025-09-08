@@ -67,7 +67,7 @@ jobs:
             --exclude visual_3d \
             --exclude ui_controls_demo \
             --exclude npc_town_demo \
-            --exclude rhai_authoring --exclude cutscene_render_demo --exclude weaving_playground --exclude combat_physics_demo --exclude navmesh_demo \
+            --exclude rhai_authoring --exclude cutscene_render_demo --exclude weaving_playground --exclude combat_physics_demo --exclude navmesh_demo --exclude physics_demo3d \
             --exclude cutscene_render_demo \
             --exclude weaving_playground
 
@@ -225,7 +225,7 @@ jobs:
             --exclude visual_3d \
             --exclude ui_controls_demo \
             --exclude npc_town_demo \
-            --exclude rhai_authoring --exclude cutscene_render_demo --exclude weaving_playground --exclude combat_physics_demo --exclude navmesh_demo \
+            --exclude rhai_authoring --exclude cutscene_render_demo --exclude weaving_playground --exclude combat_physics_demo --exclude navmesh_demo --exclude physics_demo3d \
             --exclude cutscene_render_demo \
             --exclude weaving_playground \
             --lib
@@ -275,7 +275,7 @@ jobs:
             --exclude visual_3d \
             --exclude ui_controls_demo \
             --exclude npc_town_demo \
-            --exclude rhai_authoring --exclude cutscene_render_demo --exclude weaving_playground --exclude combat_physics_demo --exclude navmesh_demo \
+            --exclude rhai_authoring --exclude cutscene_render_demo --exclude weaving_playground --exclude combat_physics_demo --exclude navmesh_demo --exclude physics_demo3d \
             --exclude cutscene_render_demo \
             --exclude weaving_playground \
             --all-features --all-targets -- -D warnings
@@ -351,7 +351,7 @@ jobs:
             --exclude visual_3d \
             --exclude ui_controls_demo \
             --exclude npc_town_demo \
-            --exclude rhai_authoring --exclude cutscene_render_demo --exclude weaving_playground --exclude combat_physics_demo --exclude navmesh_demo \
+            --exclude rhai_authoring --exclude cutscene_render_demo --exclude weaving_playground --exclude combat_physics_demo --exclude navmesh_demo --exclude physics_demo3d \
             --exclude cutscene_render_demo \
             --exclude weaving_playground
 

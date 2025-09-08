@@ -56,6 +56,7 @@ resolver = "2"
 # - weaving_playground: API mismatches with renderer and physics
 # - combat_physics_demo: missing combat_physics module
 # - navmesh_demo: renderer API mismatch
+# - physics_demo3d: clippy error with PI constant
 problematic = [
   "astraweave-author",
   "visual_3d", 
@@ -65,7 +66,8 @@ problematic = [
   "cutscene_render_demo",
   "weaving_playground",
   "combat_physics_demo",
-  "navmesh_demo"
+  "navmesh_demo",
+  "physics_demo3d"
 ]
 
 [workspace.package]
