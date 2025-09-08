@@ -18,7 +18,7 @@
    * The engine doesn’t handle audio. Support for background music, spatial sound effects, voice‑over playback and procedural dialogue needs to be added.
    * AI‑driven companion banter will require text‑to‑speech or recorded voice lines, and a dialogue system to manage timing and variation.
 
-5. **UI/UX and Player Controls**
+✅5. **UI/UX and Player Controls**
 
    * There’s no menu system, HUD, inventory screen, map/quest log, crafting interface or accessibility options. These would need to be designed and integrated with the engine.
    * Input handling beyond simple key or mouse events (controller support, remapping, touch) must be added.
