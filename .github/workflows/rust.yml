@@ -24,6 +24,7 @@ jobs:
       run: sudo apt-get update && sudo apt-get install -y libasound2-dev libudev-dev
     
     - name: Build - Core Components
+      shell: bash
       run: |
         cargo build --verbose \
           -p astraweave-core \
@@ -33,6 +34,7 @@ jobs:
           -p astraweave-render \
           -p hello_companion
     - name: Run tests - Core Components
+      shell: bash
       run: |
         cargo test --verbose \
           -p astraweave-input \

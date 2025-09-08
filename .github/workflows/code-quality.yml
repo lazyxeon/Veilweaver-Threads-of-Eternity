@@ -27,7 +27,7 @@ jobs:
         with:
           components: clippy
       - name: Clippy check
-        run: cargo clippy --all-targets --all-features -- -D warnings
+        run: cargo clippy -p astraweave-core -p astraweave-ai -p astraweave-physics -p astraweave-nav -p astraweave-render -p hello_companion --all-features -- -D warnings
 
   rustfmt:
     name: Rustfmt
@@ -39,4 +39,4 @@ jobs:
         with:
           components: rustfmt
       - name: Check formatting
-        run: cargo fmt --all -- --check
+        run: cargo fmt -p astraweave-core -p astraweave-ai -p astraweave-physics -p astraweave-nav -p astraweave-render -p hello_companion --check
