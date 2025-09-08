@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Introduction - AstraWeave: AI-Native Game Engine Documentation</title>
+        <title>Platform Support - AstraWeave: AI-Native Game Engine Documentation</title>
 
 
         <!-- Custom HTML head -->
@@ -12,34 +12,34 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff">
 
-        <link rel="icon" href="favicon.svg">
-        <link rel="shortcut icon" href="favicon.png">
-        <link rel="stylesheet" href="css/variables.css">
-        <link rel="stylesheet" href="css/general.css">
-        <link rel="stylesheet" href="css/chrome.css">
-        <link rel="stylesheet" href="css/print.css" media="print">
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
 
         <!-- Fonts -->
-        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
-        <link rel="stylesheet" href="fonts/fonts.css">
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
 
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" id="highlight-css" href="highlight.css">
-        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
-        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
 
 
         <!-- Provide site root and default themes to javascript -->
         <script>
-            const path_to_root = "";
+            const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex.js";
+            window.path_to_searchindex_js = "../searchindex.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc.js"></script>
+        <script src="../toc.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -106,7 +106,7 @@
             <!-- populated by js -->
             <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
             <noscript>
-                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
             </noscript>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -141,13 +141,13 @@
                     <h1 class="menu-title">AstraWeave: AI-Native Game Engine Documentation</h1>
 
                     <div class="right-buttons">
-                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
                             <i id="print-button" class="fa fa-print"></i>
                         </a>
                         <a href="https://github.com/lazyxeon/AstraWeave-AI-Native-Gaming-Engine" title="Git repository" aria-label="Git repository">
                             <i id="git-repository-button" class="fa fa-github"></i>
                         </a>
-                        <a href="https://github.com/lazyxeon/AstraWeave-AI-Native-Gaming-Engine/edit/main/docs/src/src/README.md" title="Suggest an edit" aria-label="Suggest an edit" rel="edit">
+                        <a href="https://github.com/lazyxeon/AstraWeave-AI-Native-Gaming-Engine/edit/main/docs/src/src/reference/platforms.md" title="Suggest an edit" aria-label="Suggest an edit" rel="edit">
                             <i id="git-edit-button" class="fa fa-edit"></i>
                         </a>
 
@@ -181,67 +181,17 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="astraweave-ai-native-game-engine-documentation"><a class="header" href="#astraweave-ai-native-game-engine-documentation">AstraWeave: AI-Native Game Engine Documentation</a></h1>
-<p>Welcome to the comprehensive documentation for <strong>AstraWeave</strong>, the first game engine built from the ground up for AI-native gameplay.</p>
-<h2 id="what-is-astraweave"><a class="header" href="#what-is-astraweave">What is AstraWeave?</a></h2>
-<p>AstraWeave is a deterministic, ECS-based game engine where <strong>AI agents are first-class citizens</strong>. Unlike traditional engines where AI is bolted on as an afterthought, AstraWeave implements the core AI loop (<strong>Perception → Reasoning → Planning → Action</strong>) directly into the simulation architecture.</p>
-<h2 id="key-features"><a class="header" href="#key-features">Key Features</a></h2>
-<p>🧠 <strong>AI-Native Architecture</strong> - Agents plan through sandboxed tools with full engine validation<br />
-🎯 <strong>Deterministic Simulation</strong> - 60Hz fixed-tick simulation with authoritative validation<br />
-🛡️ <strong>Tool Sandbox Security</strong> - AI can only act through validated verbs (no cheating)<br />
-🤝 <strong>Persistent Companions</strong> - AI profiles that learn and adapt across sessions<br />
-🎭 <strong>Adaptive Boss Systems</strong> - Directors that evolve tactics and reshape battlefields<br />
-🌐 <strong>Local-First AI</strong> - 7B-12B quantized LLMs for low-latency decisions</p>
-<h2 id="who-is-this-for"><a class="header" href="#who-is-this-for">Who is This For?</a></h2>
-<p>This documentation serves different types of users:</p>
-<h3 id="-game-developers"><a class="header" href="#-game-developers">🎮 Game Developers</a></h3>
-<ul>
-<li>Want to build games with intelligent AI companions</li>
-<li>Need dynamic bosses that adapt to player strategies</li>
-<li>Seek emergent gameplay from AI agent interactions</li>
-<li><strong>Start with:</strong> <a href="./getting-started/quick-start.html">Quick Start Guide</a></li>
-</ul>
-<h3 id="-engine-contributors"><a class="header" href="#-engine-contributors">🔧 Engine Contributors</a></h3>
-<ul>
-<li>Want to contribute to the engine's core systems</li>
-<li>Interested in AI-native architecture design</li>
-<li>Need to understand the codebase structure</li>
-<li><strong>Start with:</strong> <a href="./dev/contributing.html">Contributing Guide</a></li>
-</ul>
-<h3 id="-ai-researchers"><a class="header" href="#-ai-researchers">🧠 AI Researchers</a></h3>
-<ul>
-<li>Studying AI-native game architectures</li>
-<li>Interested in perception, planning, and validation systems</li>
-<li>Want to understand tool-based AI validation</li>
-<li><strong>Start with:</strong> <a href="./architecture/ai-native.html">AI-Native Design</a></li>
-</ul>
-<h3 id="-students--learners"><a class="header" href="#-students--learners">📚 Students &amp; Learners</a></h3>
-<ul>
-<li>Learning about game engine architecture</li>
-<li>Understanding ECS and deterministic simulation</li>
-<li>Exploring AI in games</li>
-<li><strong>Start with:</strong> <a href="./architecture/overview.html">Architecture Overview</a></li>
-</ul>
-<h2 id="quick-navigation"><a class="header" href="#quick-navigation">Quick Navigation</a></h2>
-<ul>
-<li><strong>New to AstraWeave?</strong> → <a href="./getting-started/quick-start.html">Quick Start Guide</a></li>
-<li><strong>Want to build a game?</strong> → <a href="./game-dev/first-game.html">Building Your First Game</a></li>
-<li><strong>Need API reference?</strong> → <a href="./api/index.html">API Documentation</a></li>
-<li><strong>Looking for examples?</strong> → <a href="./examples/index.html">Working Examples</a></li>
-<li><strong>Want to contribute?</strong> → <a href="./dev/contributing.html">Contributing Guide</a></li>
-<li><strong>Having issues?</strong> → <a href="./resources/troubleshooting.html">Troubleshooting</a></li>
-</ul>
-<h2 id="reference-implementation-veilweaver"><a class="header" href="#reference-implementation-veilweaver">Reference Implementation: Veilweaver</a></h2>
-<p><strong>Veilweaver: Threads of Eternity</strong> serves as AstraWeave's reference implementation—a complete AI-native Action RPG that demonstrates the engine's capabilities. Learn more in the <a href="./veilweaver/overview.html">Veilweaver section</a>.</p>
-<hr />
-<p><em>Ready to build the future of AI-native gaming? Let's get started!</em></p>
+                        <h1 id="platform-support"><a class="header" href="#platform-support">Platform Support</a></h1>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../reference/cli-tools.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
 
-                            <a rel="next prefetch" href="getting-started/quick-start.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="../resources/faq.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -251,8 +201,11 @@
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../reference/cli-tools.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
 
-                    <a rel="next prefetch" href="getting-started/quick-start.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="../resources/faq.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>
@@ -267,13 +220,13 @@
         </script>
 
 
-        <script src="elasticlunr.min.js"></script>
-        <script src="mark.min.js"></script>
-        <script src="searcher.js"></script>
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
 
-        <script src="clipboard.min.js"></script>
-        <script src="highlight.js"></script>
-        <script src="book.js"></script>
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
 
         <!-- Custom JS scripts -->
 
