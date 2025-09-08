@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1757371362589,
+  "lastUpdate": 1757371747331,
   "repoUrl": "https://github.com/lazyxeon/AstraWeave-AI-Native-Gaming-Engine",
   "entries": {
     "Rust Benchmark": [
@@ -254,6 +254,68 @@ window.BENCHMARK_DATA = {
           {
             "name": "binding_set_creation",
             "value": 679,
+            "range": "± 1",
+            "unit": "ns/iter"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "lazyxeon",
+            "username": "lazyxeon"
+          },
+          "committer": {
+            "name": "lazyxeon",
+            "username": "lazyxeon"
+          },
+          "id": "cd5dd3dd853b20dc6916d44322e03b8f697aa539",
+          "message": "Add variable declaration in rust-cache-optimized.yml",
+          "timestamp": "2025-09-08T22:30:53Z",
+          "url": "https://github.com/lazyxeon/AstraWeave-AI-Native-Gaming-Engine/pull/32/commits/cd5dd3dd853b20dc6916d44322e03b8f697aa539"
+        },
+        "date": 1757371746223,
+        "tool": "cargo",
+        "benches": [
+          {
+            "name": "world_creation",
+            "value": 56,
+            "range": "± 1",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "entity_spawning",
+            "value": 23372,
+            "range": "± 52",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "world_tick",
+            "value": 48,
+            "range": "± 0",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "binding_creation",
+            "value": 3,
+            "range": "± 0",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "binding_serialization",
+            "value": 66,
+            "range": "± 0",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "binding_deserialization",
+            "value": 97,
+            "range": "± 0",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "binding_set_creation",
+            "value": 676,
             "range": "± 1",
             "unit": "ns/iter"
           }
