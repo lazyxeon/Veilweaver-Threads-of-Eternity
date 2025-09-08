@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["ActionStep","DirectorOp","EngineError"],"struct":["CompanionState","Constraints","DirectorBudget","DirectorPlan","EnemyState","IVec2","PlanIntent","PlayerState","Poi","Rect","ToolRegistry","ToolSpec","WorldSnapshot"],"type":["Entity"]};
