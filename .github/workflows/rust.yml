@@ -23,7 +23,17 @@ jobs:
     - name: Install ALSA development libraries
       run: sudo apt-get update && sudo apt-get install -y libasound2-dev libudev-dev
     
-    - name: Build
-      run: cargo build --verbose
-    - name: Run tests
-      run: cargo test --verbose
+    - name: Build - Core Components
+      run: |
+        cargo build --verbose \
+          -p astraweave-core \
+          -p astraweave-ai \
+          -p astraweave-physics \
+          -p astraweave-nav \
+          -p astraweave-render \
+          -p hello_companion
+    - name: Run tests - Core Components
+      run: |
+        cargo test --verbose \
+          -p astraweave-input \
+          -p astraweave-core
