@@ -16,9 +16,9 @@ progress.when = "auto"
 
 [env]
 # Configure sccache for optimal performance
-SCCACHE_CACHE_SIZE = { value = "10G", relative = false }
+SCCACHE_CACHE_SIZE = { value = "10G" }
 SCCACHE_DIR = { value = "./target/sccache", relative = true }
-SCCACHE_IDLE_TIMEOUT = { value = "0", relative = false }
+SCCACHE_IDLE_TIMEOUT = { value = "0" }
 
 [net]
 # Optimize network settings for large workspace
