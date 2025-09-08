@@ -44,3 +44,4 @@ private/
 /tmp/
 *.pid
 
+output.txt
