@@ -98,7 +98,7 @@ jobs:
 
       - name: Install system dependencies (macOS)
         if: matrix.os == 'macos-latest'
-        run: brew install pkg-config
+        run: brew install pkg-config cmake
 
       - name: Cache cleanup (if requested)
         if: github.event.inputs.cache_action == 'clean'
@@ -126,7 +126,12 @@ jobs:
             --exclude visual_3d \
             --exclude ui_controls_demo \
             --exclude npc_town_demo \
-            --exclude rhai_authoring
+            --exclude rhai_authoring \
+            --exclude cutscene_render_demo \
+            --exclude weaving_playground \
+            --exclude combat_physics_demo \
+            --exclude navmesh_demo \
+            --exclude physics_demo3d
           
           # Pre-compile in release mode for commonly used crates
           cargo check --release \
@@ -144,7 +149,12 @@ jobs:
             --exclude visual_3d \
             --exclude ui_controls_demo \
             --exclude npc_town_demo \
-            --exclude rhai_authoring
+            --exclude rhai_authoring \
+            --exclude cutscene_render_demo \
+            --exclude weaving_playground \
+            --exclude combat_physics_demo \
+            --exclude navmesh_demo \
+            --exclude physics_demo3d
 
   workspace-analysis:
     name: Workspace Analysis

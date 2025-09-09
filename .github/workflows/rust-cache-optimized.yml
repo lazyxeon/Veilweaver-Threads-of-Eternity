@@ -25,7 +25,7 @@ env:
   SCCACHE_CACHE_SIZE: "10G"
   SCCACHE_IDLE_TIMEOUT: 0
   # Problematic packages to exclude from builds
-  EXCLUDED_PACKAGES: "--exclude ui_controls_demo --exclude npc_town_demo --exclude rhai_authoring --exclude navmesh_demo --exclude cutscene_render_demo --exclude weaving_playground --exclude combat_physics_demo"
+  EXCLUDED_PACKAGES: "--exclude astraweave-author --exclude visual_3d --exclude ui_controls_demo --exclude npc_town_demo --exclude rhai_authoring --exclude navmesh_demo --exclude cutscene_render_demo --exclude weaving_playground --exclude combat_physics_demo --exclude physics_demo3d"
 
 jobs:
   cache-strategy:
@@ -92,7 +92,7 @@ jobs:
         if: matrix.os == 'macos-latest'
         run: |
           brew update
-          brew install pkg-config
+          brew install pkg-config cmake
 
       - name: Install sccache (Ubuntu/macOS)
         if: matrix.os != 'windows-latest'

@@ -1,14 +1,18 @@
 [build]
-# Optimize for CI environment - remove debuginfo in CI for faster builds
-rustflags = ["-C", "debuginfo=0"]
+# Jobs setting - use system default for better performance
+# jobs = 4  # Uncomment to limit parallelism
 
 [target.'cfg(all())']
 # Enable sccache for faster compilation when available
 # rustc-wrapper = "sccache"  # Enabled via environment variable in CI
 
-# Optimize for native CPU features in release builds
+# Optimize for native CPU features in release builds on non-MSVC targets
 [target.'cfg(not(target_env = "msvc"))']
 rustflags = ["-C", "target-cpu=native"]
+
+# Optimize for CI environment - remove debuginfo in CI builds
+[target.'cfg(target_env = "ci")']
+rustflags = ["-C", "debuginfo=0"]
 
 [term]
 color = "always"
