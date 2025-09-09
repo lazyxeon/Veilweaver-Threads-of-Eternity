@@ -41,7 +41,7 @@ pub fn perform_attack_sweep(
 ) -> Option<HitResult> {
     // Temporarily disabled due to rapier3d API changes
     // TODO: Update to use new rapier3d cast_shape API
-    None
+    unimplemented!("perform_attack_sweep is not yet implemented due to rapier3d API changes")
     /*
     let shape = SharedShape::capsule_y(radius * 0.5, radius);
     let dir = to - from;
