@@ -34,12 +34,12 @@
    * Asset pipeline: import/convert textures, models, animations, and audio from DCC tools into the engine’s format.
    * Debugging and profiling tools: performance monitors, visual profilers, event logs, and hot‑reload for scripts.
 
-8. **Networking and Multiplayer**
+✅8. **Networking and Multiplayer**
 
    * A simple WebSocket co‑op prototype exists, but full multiplayer requires robust server authority, prediction and reconciliation, matchmaking/lobbies, persistence, and anti‑cheat measures.
    * If cross‑platform play is intended, network code must handle platform differences, NAT traversal, and possibly region‑based servers.
 
-9. **Data Persistence and Save System**
+✅9. **Data Persistence and Save System**
 
    * The engine lacks a comprehensive save/load pipeline for game progress, companion profiles, world state and player inventories.
    * Versioning and migration of save files will be needed as the game evolves.
