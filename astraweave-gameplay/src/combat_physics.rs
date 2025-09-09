@@ -1,5 +1,5 @@
 use glam::Vec3;
-use rapier3d::prelude::*;
+// use rapier3d::prelude::*; // Commented out due to API compatibility issues
 use astraweave_physics::PhysicsWorld;
 use crate::{Stats, DamageType};
 
@@ -19,16 +19,21 @@ pub struct Combatant {
 pub struct HitResult { pub target: u64, pub damage: i32, pub parried: bool }
 
 /// Sweep a capsule from `from` to `to`, apply damage to first hit collider body that isn't `self_id`.
+/// TODO: Fix rapier3d API compatibility issues
 pub fn perform_attack_sweep(
-    phys: &mut PhysicsWorld,
-    self_id: u64,
-    from: Vec3,
-    to: Vec3,
-    radius: f32,
-    base_damage: i32,
-    dtype: DamageType,
-    targets: &mut [Combatant],
+    _phys: &mut PhysicsWorld,
+    _self_id: u64,
+    _from: Vec3,
+    _to: Vec3,
+    _radius: f32,
+    _base_damage: i32,
+    _dtype: DamageType,
+    _targets: &mut [Combatant],
 ) -> Option<HitResult> {
+    // Temporarily disabled due to rapier3d API changes
+    // TODO: Update to use new rapier3d cast_shape API
+    None
+    /*
     let shape = SharedShape::capsule_y(radius * 0.5, radius);
     let dir = to - from;
     let len = dir.length();
@@ -64,4 +69,5 @@ pub fn perform_attack_sweep(
         }
     }
     None
+    */
 }
