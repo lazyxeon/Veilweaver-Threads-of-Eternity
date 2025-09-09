@@ -1,5 +1,6 @@
 use aw_debug::{watch_reload_signal, watch_scripts, ChromeTraceGuard, PerfHud};
 use eframe::egui;
+use rand::Rng;
 use std::path::PathBuf;
 
 struct DebugApp {
@@ -37,16 +38,18 @@ impl DebugApp {
     }
 
     fn simulate_frame(&mut self) {
+        let mut rng = rand::thread_rng();
+        
         // Simulate some changing system times
         for (_, time) in &mut self.system_times {
-            *time += (rand::random::<f32>() - 0.5) * 0.2;
+            *time += (rng.gen::<f32>() - 0.5) * 0.2;
             *time = time.max(0.1);
         }
 
         self.hud.systems_snapshot = self.system_times.clone();
 
         // Occasionally log events
-        if rand::random::<f32>() < 0.05 {
+        if rng.gen::<f32>() < 0.05 {
             let events = [
                 ("ai", "Path recalculated"),
                 ("physics", "Collision detected"),
@@ -54,14 +57,15 @@ impl DebugApp {
                 ("render", "Shader recompiled"),
                 ("audio", "Sound effect played"),
             ];
-            let (category, msg) = events[rand::random::<usize>() % events.len()];
+            let index = (rand::random::<f32>() * events.len() as f32) as usize % events.len();
+            let (category, msg) = events[index];
             self.hud.log_event(category, msg);
         }
 
         // Update entity count occasionally
-        if rand::random::<f32>() < 0.02 {
+        if rng.gen::<f32>() < 0.02 {
             self.entity_count =
-                (self.entity_count as f32 * (1.0 + (rand::random::<f32>() - 0.5) * 0.1)) as u32;
+                (self.entity_count as f32 * (1.0 + (rng.gen::<f32>() - 0.5) * 0.1)) as u32;
             self.hud.entity_count = self.entity_count;
         }
     }
@@ -115,6 +119,6 @@ fn main() -> Result<(), eframe::Error> {
     eframe::run_native(
         "AstraWeave Debug Tools",
         options,
-        Box::new(|_cc| Box::new(DebugApp::new())),
+        Box::new(|_cc| Ok(Box::new(DebugApp::new()))),
     )
 }
