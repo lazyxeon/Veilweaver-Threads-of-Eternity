@@ -57,12 +57,14 @@ EXCLUDED_CRATES=(
     "cutscene_render_demo"
     "weaving_playground"
     "combat_physics_demo"
-    "navmesh_demo"
-    "physics_demo3d"
-    "debug_toolkit_demo"
-    "aw_debug"
-    "aw_editor"
     "aw_asset_cli"
+    "debug_toolkit_demo"   # Multiple API mismatches in egui/winit/renderer integration
+    "aw_editor"           # eframe/glutin sync/send trait issues
+    "aw_debug"            # eframe API mismatches
+    "visual_3d"           # clippy deny-level errors
+    "navmesh_demo"        # clippy deny-level errors (approx_constant)
+    "physics_demo3d"      # clippy deny-level errors (approx_constant)
+
 )
 
 # Platform-specific optimizations

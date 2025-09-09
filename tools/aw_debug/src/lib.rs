@@ -1,8 +1,7 @@
 use anyhow::Result;
-use crossbeam_channel::{unbounded, Receiver, Sender};
 use egui::{self, Color32};
 use egui_plot::{Line, Plot, PlotPoints};
-use notify::{Event, RecommendedWatcher, RecursiveMode, Watcher};
+use notify::{RecommendedWatcher, RecursiveMode, Watcher};
 use std::{
     path::PathBuf,
     time::Instant,
@@ -175,7 +174,6 @@ pub fn watch_reload_signal(
     on_reload: impl Fn() + Send + 'static,
 ) -> Result<RecommendedWatcher> {
     let _signal_path = content_dir.join("reload.signal");
-
     let mut watcher = notify::recommended_watcher(move |res| {
         if let Ok(event) = res {
             if let notify::Event {

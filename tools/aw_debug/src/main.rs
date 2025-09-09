@@ -57,7 +57,8 @@ impl DebugApp {
                 ("render", "Shader recompiled"),
                 ("audio", "Sound effect played"),
             ];
-            let (category, msg) = events[rng.gen_range(0..events.len())];
+            let index = (rand::random::<f32>() * events.len() as f32) as usize % events.len();
+            let (category, msg) = events[index];
             self.hud.log_event(category, msg);
         }
 
