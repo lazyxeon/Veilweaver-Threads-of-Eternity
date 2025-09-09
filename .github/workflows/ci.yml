@@ -79,7 +79,9 @@ jobs:
 
       # ---- Core component checks ----
       - name: Cargo check (workspace, excludes)
-        run: cargo check --locked --workspace ${{ env.EXCLUDED_PACKAGES }}
+        run: >
+          cargo check --locked --workspace
+          ${{ env.EXCLUDED_PACKAGES }}
 
   build:
     name: Build (${{ matrix.os }})
@@ -131,53 +133,52 @@ jobs:
 
       # ---- Build core working components (debug) ----
       - name: Build core components (debug)
-        run: |
-          cargo build --frozen --verbose \
-            -p astraweave-core \
-            -p astraweave-ai \
-            -p astraweave-physics \
-            -p astraweave-nav \
-            -p astraweave-render \
-            -p astraweave-gameplay \
-            -p astraweave-audio \
-            -p astraweave-npc \
-            -p astraweave-input \
-            -p astraweave-ui \
-            -p astraweave-net \
-            -p astraweave-director \
-            -p astraweave-memory \
-            -p astraweave-persona \
-            -p astraweave-llm \
-            -p astraweave-ipc \
-            -p hello_companion
+        run: >
+          cargo build --frozen --verbose
+          -p astraweave-core
+          -p astraweave-ai
+          -p astraweave-physics
+          -p astraweave-nav
+          -p astraweave-render
+          -p astraweave-gameplay
+          -p astraweave-audio
+          -p astraweave-npc
+          -p astraweave-input
+          -p astraweave-ui
+          -p astraweave-net
+          -p astraweave-director
+          -p astraweave-memory
+          -p astraweave-persona
+          -p astraweave-ipc
+          -p hello_companion
 
       # ---- Build working examples (debug, non-blocking) ----
       - name: Build working examples (debug)
         continue-on-error: true
-        run: |
-          cargo build --frozen --verbose \
-            -p hello_companion \
-            -p adaptive_boss \
-            -p companion_profile \
-            -p ipc_loopback \
-            -p llm_toolcall \
-            -p phase_director \
-            -p persona_loader \
-            -p coop_server \
-            -p coop_client \
-            -p audio_spatial_demo \
-            -p dialogue_voice_demo || echo "Some examples failed to build"
+        run: >
+          cargo build --frozen --verbose
+          -p hello_companion
+          -p adaptive_boss
+          -p companion_profile
+          -p ipc_loopback
+          -p llm_toolcall
+          -p phase_director
+          -p persona_loader
+          -p coop_server
+          -p coop_client
+          -p audio_spatial_demo
+          -p dialogue_voice_demo
 
       # ---- Release build for selected core components ----
       - name: Build core components (release)
-        run: |
-          cargo build --frozen --release --verbose \
-            -p astraweave-core \
-            -p astraweave-ai \
-            -p astraweave-physics \
-            -p astraweave-nav \
-            -p astraweave-render \
-            -p hello_companion
+        run: >
+          cargo build --frozen --release --verbose
+          -p astraweave-core
+          -p astraweave-ai
+          -p astraweave-physics
+          -p astraweave-nav
+          -p astraweave-render
+          -p hello_companion
 
   test:
     name: Test (${{ matrix.os }})
@@ -225,7 +226,9 @@ jobs:
 
       # ---- Run tests ----
       - name: Run tests (workspace, excludes)
-        run: cargo test --workspace --locked --lib ${{ env.EXCLUDED_PACKAGES }}
+        run: >
+          cargo test --workspace --locked --lib
+          ${{ env.EXCLUDED_PACKAGES }}
 
   linting:
     name: Code Quality (Linux)
@@ -259,11 +262,16 @@ jobs:
           key: linting-v3
           cache-all-crates: true
 
+      # ---- Code formatting ----
       - name: Check code formatting
         run: cargo fmt --all --check
 
+      # ---- Clippy linting ----
       - name: Run Clippy (workspace, excludes, warnings as errors)
-        run: cargo clippy --workspace --locked ${{ env.EXCLUDED_PACKAGES }} --all-features --all-targets -- -D warnings
+        run: >
+          cargo clippy --workspace --locked
+          ${{ env.EXCLUDED_PACKAGES }}
+          --all-features --all-targets -- -D warnings
 
   security:
     name: Security Audit
@@ -335,7 +343,9 @@ jobs:
           key: msrv-${{ steps.msrv.outputs.version }}-v3
 
       - name: Check MSRV compatibility
-        run: cargo check --workspace --locked ${{ env.EXCLUDED_PACKAGES }}
+        run: >
+          cargo check --workspace --locked
+          ${{ env.EXCLUDED_PACKAGES }}
 
   demo:
     name: Demo Execution (Linux)
