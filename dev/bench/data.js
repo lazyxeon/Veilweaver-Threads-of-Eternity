@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1757433429273,
+  "lastUpdate": 1757433845780,
   "repoUrl": "https://github.com/lazyxeon/AstraWeave-AI-Native-Gaming-Engine",
   "entries": {
     "Rust Benchmark": [
@@ -192,6 +192,72 @@ window.BENCHMARK_DATA = {
           {
             "name": "binding_set_creation",
             "value": 669,
+            "range": "± 1",
+            "unit": "ns/iter"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "198982749+Copilot@users.noreply.github.com",
+            "name": "Copilot",
+            "username": "Copilot"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "abe95b89fd0fb0b16d61e231fa10550b8a3be7fe",
+          "message": "Complete dependency management & cache optimization overhaul for AstraWeave (#42)\n\n* Initial plan\n\n* Fix Rust toolchain version consistency and optimize .cargo/config.toml\n\nCo-authored-by: lazyxeon <79929721+lazyxeon@users.noreply.github.com>\n\n* Complete dependency management & cache optimization overhaul\n\nCo-authored-by: lazyxeon <79929721+lazyxeon@users.noreply.github.com>\n\n* Update .github/workflows/rust-cache-optimized.yml\n\nCo-authored-by: Copilot <175728472+Copilot@users.noreply.github.com>\n\n* Update .github/workflows/dependency-management.yml\n\nCo-authored-by: Copilot <175728472+Copilot@users.noreply.github.com>\n\n* Update .cargo/config.toml\n\nCo-authored-by: Copilot <175728472+Copilot@users.noreply.github.com>\n\n* Update .cargo/config.toml\n\nCo-authored-by: Copilot <175728472+Copilot@users.noreply.github.com>\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>\nCo-authored-by: lazyxeon <79929721+lazyxeon@users.noreply.github.com>\nCo-authored-by: Copilot <175728472+Copilot@users.noreply.github.com>",
+          "timestamp": "2025-09-09T11:26:12-04:00",
+          "tree_id": "4bc2749d5490a44371b09b0f1d921ac3fdbfc701",
+          "url": "https://github.com/lazyxeon/AstraWeave-AI-Native-Gaming-Engine/commit/abe95b89fd0fb0b16d61e231fa10550b8a3be7fe"
+        },
+        "date": 1757433845310,
+        "tool": "cargo",
+        "benches": [
+          {
+            "name": "world_creation",
+            "value": 56,
+            "range": "± 0",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "entity_spawning",
+            "value": 23127,
+            "range": "± 181",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "world_tick",
+            "value": 49,
+            "range": "± 0",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "binding_creation",
+            "value": 2,
+            "range": "± 0",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "binding_serialization",
+            "value": 64,
+            "range": "± 0",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "binding_deserialization",
+            "value": 102,
+            "range": "± 0",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "binding_set_creation",
+            "value": 660,
             "range": "± 1",
             "unit": "ns/iter"
           }
