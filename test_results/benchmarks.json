@@ -1,0 +1,43 @@
+[
+{
+  "name": "astraweave-core::entity_spawning",
+  "unit": "ns",
+  "value": 22921.678989513315
+}
+,
+{
+  "name": "astraweave-core::world_creation",
+  "unit": "ns",
+  "value": 56.54306708696582
+}
+,
+{
+  "name": "astraweave-core::world_tick",
+  "unit": "ns",
+  "value": 49.43670608718522
+}
+,
+{
+  "name": "astraweave-input::binding_creation",
+  "unit": "ns",
+  "value": 2.652441109514703
+}
+,
+{
+  "name": "astraweave-input::binding_deserialization",
+  "unit": "ns",
+  "value": 289.2374223589979
+}
+,
+{
+  "name": "astraweave-input::binding_serialization",
+  "unit": "ns",
+  "value": 366.39455656479674
+}
+,
+{
+  "name": "astraweave-input::binding_set_creation",
+  "unit": "ns",
+  "value": 654.6751436872596
+}
+]
