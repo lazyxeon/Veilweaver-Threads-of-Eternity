@@ -4,7 +4,8 @@
 
 [target.'cfg(all())']
 # Enable sccache for faster compilation when available
-# rustc-wrapper = "sccache"  # Enabled via environment variable in CI
+# This will be overridden by RUSTC_WRAPPER environment variable when sccache is available
+# rustc-wrapper = "sccache"
 
 # Optimize for native CPU features in release builds on non-MSVC targets
 [target.'cfg(not(target_env = "msvc"))']
