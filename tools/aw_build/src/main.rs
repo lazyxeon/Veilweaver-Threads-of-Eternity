@@ -3,13 +3,21 @@ use clap::{Parser, Subcommand};
 use rayon::prelude::*;
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
-use std::{fs, io::Write, path::{Path, PathBuf}};
+use std::{
+    fs,
+    io::Write,
+    path::{Path, PathBuf},
+};
 use time::OffsetDateTime;
 use walkdir::WalkDir;
 use zip::write::FileOptions;
 
 #[derive(Parser)]
-#[command(name="aw_build", version, about="Bundle binaries/assets and build delta patches")]
+#[command(
+    name = "aw_build",
+    version,
+    about = "Bundle binaries/assets and build delta patches"
+)]
 struct Cli {
     #[command(subcommand)]
     cmd: Cmd,
@@ -67,12 +75,29 @@ struct FileEntry {
 fn main() -> Result<()> {
     let cli = Cli::parse();
     match cli.cmd {
-        Cmd::Bundle { bin_dir, assets, out, name, version } => bundle(bin_dir, assets, out, name, version),
-        Cmd::Patch { old_manifest, new_manifest, out, name } => patch(old_manifest, new_manifest, out, name),
+        Cmd::Bundle {
+            bin_dir,
+            assets,
+            out,
+            name,
+            version,
+        } => bundle(bin_dir, assets, out, name, version),
+        Cmd::Patch {
+            old_manifest,
+            new_manifest,
+            out,
+            name,
+        } => patch(old_manifest, new_manifest, out, name),
     }
 }
 
-fn bundle(bin_dir: PathBuf, assets: PathBuf, out: PathBuf, name: String, version: String) -> Result<()> {
+fn bundle(
+    bin_dir: PathBuf,
+    assets: PathBuf,
+    out: PathBuf,
+    name: String,
+    version: String,
+) -> Result<()> {
     fs::create_dir_all(&out)?;
     let work = staging(&bin_dir, &assets, &out, &name)?;
     let manifest = gen_manifest(&work, &name, &version)?;
@@ -90,8 +115,15 @@ fn patch(old_manifest: PathBuf, new_manifest: PathBuf, out: PathBuf, name: Strin
     let old: Manifest = serde_json::from_slice(&fs::read(&old_manifest)?)?;
     let new: Manifest = serde_json::from_slice(&fs::read(&new_manifest)?)?;
 
-    let changed: Vec<&FileEntry> = new.files.iter()
-        .filter(|nf| old.files.iter().find(|of| of.rel == nf.rel && of.sha256 == nf.sha256).is_none())
+    let changed: Vec<&FileEntry> = new
+        .files
+        .iter()
+        .filter(|nf| {
+            old.files
+                .iter()
+                .find(|of| of.rel == nf.rel && of.sha256 == nf.sha256)
+                .is_none()
+        })
         .collect();
 
     if changed.is_empty() {
@@ -99,8 +131,13 @@ fn patch(old_manifest: PathBuf, new_manifest: PathBuf, out: PathBuf, name: Strin
         return Ok(());
     }
 
-    let patch_dir = new_manifest.parent().unwrap().join(format!("_patch_src_{name}"));
-    if patch_dir.exists() { fs::remove_dir_all(&patch_dir)?; }
+    let patch_dir = new_manifest
+        .parent()
+        .unwrap()
+        .join(format!("_patch_src_{name}"));
+    if patch_dir.exists() {
+        fs::remove_dir_all(&patch_dir)?;
+    }
     fs::create_dir_all(&patch_dir)?;
 
     // Copy changed files from new bundle folder location (assumes layout under dist/<name>-<ver> folder)
@@ -112,7 +149,9 @@ fn patch(old_manifest: PathBuf, new_manifest: PathBuf, out: PathBuf, name: Strin
         let candidate = find_rel_upwards(new_manifest.parent().unwrap(), &ent.rel)
             .with_context(|| format!("locate {}", ent.rel))?;
         let dest = patch_dir.join(&ent.rel);
-        if let Some(parent) = dest.parent() { fs::create_dir_all(parent)?; }
+        if let Some(parent) = dest.parent() {
+            fs::create_dir_all(parent)?;
+        }
         fs::copy(candidate, &dest)?;
     }
 
@@ -130,20 +169,32 @@ fn gen_manifest(root: &Path, name: &str, version: &str) -> Result<Manifest> {
         .filter(|e| e.file_type().is_file())
         .collect();
 
-    let files = paths.par_iter().map(|e| {
-        let p = e.path();
-        let rel = p.strip_prefix(root).unwrap().to_string_lossy().replace('\\', "/");
-        let data = fs::read(p).unwrap();
-        let mut hasher = Sha256::new();
-        hasher.update(&data);
-        let sha = hex::encode(hasher.finalize());
-        FileEntry { rel, sha256: sha, size: data.len() as u64 }
-    }).collect();
+    let files = paths
+        .par_iter()
+        .map(|e| {
+            let p = e.path();
+            let rel = p
+                .strip_prefix(root)
+                .unwrap()
+                .to_string_lossy()
+                .replace('\\', "/");
+            let data = fs::read(p).unwrap();
+            let mut hasher = Sha256::new();
+            hasher.update(&data);
+            let sha = hex::encode(hasher.finalize());
+            FileEntry {
+                rel,
+                sha256: sha,
+                size: data.len() as u64,
+            }
+        })
+        .collect();
 
     Ok(Manifest {
         name: name.into(),
         version: version.into(),
-        created_at: OffsetDateTime::now_utc().format(&time::format_description::well_known::Rfc3339)?,
+        created_at: OffsetDateTime::now_utc()
+            .format(&time::format_description::well_known::Rfc3339)?,
         files,
     })
 }
@@ -158,7 +209,11 @@ fn write_zip(zip_path: &Path, src_root: &Path) -> Result<()> {
         if entry.file_type().is_dir() {
             continue;
         }
-        let rel = p.strip_prefix(src_root).unwrap().to_string_lossy().replace('\\', "/");
+        let rel = p
+            .strip_prefix(src_root)
+            .unwrap()
+            .to_string_lossy()
+            .replace('\\', "/");
         zip.start_file(rel, options)?;
         let bytes = fs::read(p)?;
         zip.write_all(&bytes)?;
@@ -169,7 +224,9 @@ fn write_zip(zip_path: &Path, src_root: &Path) -> Result<()> {
 
 fn staging(bin_dir: &Path, assets: &Path, out: &Path, name: &str) -> Result<PathBuf> {
     let stage = out.join(format!("{}_stage", name));
-    if stage.exists() { fs::remove_dir_all(&stage)?; }
+    if stage.exists() {
+        fs::remove_dir_all(&stage)?;
+    }
     fs::create_dir_all(&stage)?;
 
     // copy binaries (all files in bin_dir)
@@ -178,7 +235,9 @@ fn staging(bin_dir: &Path, assets: &Path, out: &Path, name: &str) -> Result<Path
             if e.file_type().is_file() {
                 let rel = e.path().strip_prefix(bin_dir).unwrap();
                 let dst = stage.join("bin").join(rel);
-                if let Some(p) = dst.parent() { fs::create_dir_all(p)?; }
+                if let Some(p) = dst.parent() {
+                    fs::create_dir_all(p)?;
+                }
                 fs::copy(e.path(), &dst)?;
             }
         }
@@ -190,7 +249,9 @@ fn staging(bin_dir: &Path, assets: &Path, out: &Path, name: &str) -> Result<Path
             if e.file_type().is_file() {
                 let rel = e.path().strip_prefix(assets).unwrap();
                 let dst = stage.join("assets").join(rel);
-                if let Some(p) = dst.parent() { fs::create_dir_all(p)?; }
+                if let Some(p) = dst.parent() {
+                    fs::create_dir_all(p)?;
+                }
                 fs::copy(e.path(), &dst)?;
             }
         }
@@ -204,7 +265,9 @@ fn find_rel_upwards(start: &Path, rel: &str) -> Result<PathBuf> {
     let mut cur = Some(start.to_path_buf());
     while let Some(p) = cur {
         let candidate = p.join(rel);
-        if candidate.exists() { return Ok(candidate) }
+        if candidate.exists() {
+            return Ok(candidate);
+        }
         cur = p.parent().map(|x| x.to_path_buf());
     }
     anyhow::bail!("not found: {}", rel)
@@ -236,8 +299,15 @@ mod tests {
         let m1 = gen_manifest(&root1, "n", "1").unwrap();
         let m2 = gen_manifest(&root2, "n", "2").unwrap();
 
-        let changed: Vec<&FileEntry> = m2.files.iter()
-            .filter(|nf| m1.files.iter().find(|of| of.rel == nf.rel && of.sha256 == nf.sha256).is_none())
+        let changed: Vec<&FileEntry> = m2
+            .files
+            .iter()
+            .filter(|nf| {
+                m1.files
+                    .iter()
+                    .find(|of| of.rel == nf.rel && of.sha256 == nf.sha256)
+                    .is_none()
+            })
             .collect();
 
         assert_eq!(changed.len(), 1);
