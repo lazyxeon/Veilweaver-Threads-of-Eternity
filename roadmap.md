@@ -56,3 +56,5 @@
     * For PC, the engine must be adapted to run efficiently on a variety of GPUs, CPUs and operating systems, with minimum and recommended specs defined.
 
 By filling in these missing pieces—graphics and physics, gameplay systems, toolchain, full AI integration, network infrastructure, and production‑ready tooling, the Veilweaver project can move from proof‑of‑concept to a playable, scalable game and engine.
+
+* All Checkmarked items are roughed in, not fully developed and fleshed out.
