@@ -47,6 +47,7 @@ members = [
   "tools/aw_editor",
   "tools/aw_asset_cli",
   "tools/aw_debug",
+  "tools/aw_build",
 ]
 resolver = "2"
 
