@@ -56,7 +56,7 @@ format_time() {
     fi
 }
 
-# Function to process benchmark results
+# Function to process benchmark results for a specific package
 process_benchmarks() {
     local pkg=$1
     local pkg_success=false
@@ -65,27 +65,34 @@ process_benchmarks() {
         local found_benchmarks=false
         
         for benchmark_dir in target/criterion/*/; do
-            if [ -f "$benchmark_dir/new/estimates.json" ]; then
+            if [ -d "$benchmark_dir" ] && [ -f "$benchmark_dir/new/estimates.json" ]; then
                 found_benchmarks=true
                 bench_name=$(basename "$benchmark_dir")
-                mean_ns=$(jq -r '.mean.point_estimate' "$benchmark_dir/new/estimates.json" 2>/dev/null || echo "0")
                 
-                if [ "$mean_ns" != "0" ] && [ "$mean_ns" != "null" ]; then
-                    # Add to JSON
-                    if [ "$FIRST_ENTRY" != true ]; then
-                        echo ',' >> "$JSON_FILE"
+                # Safely extract mean value with error handling
+                if mean_ns=$(jq -r '.mean.point_estimate // empty' "$benchmark_dir/new/estimates.json" 2>/dev/null) && [ -n "$mean_ns" ] && [ "$mean_ns" != "null" ]; then
+                    # Validate that the value is a valid number
+                    if [[ "$mean_ns" =~ ^[0-9]+\.?[0-9]*$ ]] && (( $(echo "$mean_ns > 0" | bc -l) )); then
+                        # Add to JSON
+                        if [ "$FIRST_ENTRY" != true ]; then
+                            echo ',' >> "$JSON_FILE"
+                        fi
+                        
+                        jq -n --arg name "${pkg}::${bench_name}" --argjson value "$mean_ns" \
+                            '{name: $name, unit: "ns", value: $value}' >> "$JSON_FILE"
+                        FIRST_ENTRY=false
+                        BENCHMARK_COUNT=$((BENCHMARK_COUNT + 1))
+                        
+                        # Add to summary with proper formatting
+                        formatted_time=$(format_time "$mean_ns")
+                        printf "  %-30s %s\n" "$bench_name" "$formatted_time" | tee -a "$SUMMARY_FILE"
+                        
+                        pkg_success=true
+                    else
+                        log_error "Invalid benchmark value for $bench_name: $mean_ns"
                     fi
-                    
-                    jq -n --arg name "${pkg}::${bench_name}" --argjson value "$mean_ns" \
-                        '{name: $name, unit: "ns", value: $value}' >> "$JSON_FILE"
-                    FIRST_ENTRY=false
-                    BENCHMARK_COUNT=$((BENCHMARK_COUNT + 1))
-                    
-                    # Add to summary with proper formatting
-                    formatted_time=$(format_time "$mean_ns")
-                    printf "  %-30s %s\n" "$bench_name" "$formatted_time" | tee -a "$SUMMARY_FILE"
-                    
-                    pkg_success=true
+                else
+                    log_error "Could not extract valid benchmark data for $bench_name"
                 fi
             fi
         done
@@ -111,16 +118,16 @@ for pkg in "${BENCHMARK_PACKAGES[@]}"; do
     if [ -d "$pkg/benches" ]; then
         log_info "Running benchmarks for $pkg..."
         
-        # Clear previous criterion results for this package
+        # Clear previous criterion results to avoid cross-contamination
         if [ -d "target/criterion" ]; then
-            find target/criterion -name "*.json" -delete 2>/dev/null || true
+            rm -rf target/criterion/* 2>/dev/null || true
         fi
         
         # Run cargo bench with timeout and capture output
         if timeout 600 cargo bench -p "$pkg" --benches > "${RESULTS_DIR}/${pkg}_stdout.log" 2> "${RESULTS_DIR}/${pkg}_stderr.log"; then
             log_success "Benchmark execution completed for $pkg"
             
-            # Process the results
+            # Process the results immediately for this package
             process_benchmarks "$pkg"
             
             if [ "$VERBOSE" = "true" ]; then
