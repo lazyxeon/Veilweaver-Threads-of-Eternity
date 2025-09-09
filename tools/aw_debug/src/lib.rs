@@ -52,19 +52,16 @@ impl PerfHud {
         ui.label(format!("FPS: {:.1}", self.fps));
         ui.label(format!("Entities: {}", self.entity_count));
 
-        Plot::new("ft_plot")
-            .view_aspect(2.5)
-            .show(ui, |plot_ui| {
-                let ys: Vec<[f64; 2]> = self
-                    .frame_times
-                    .iter()
-                    .enumerate()
-                    .map(|(i, dt)| [i as f64, (*dt * 1000.0) as f64])
-                    .collect();
-                let line = Line::new(PlotPoints::new(ys))
-                    .color(Color32::from_rgb(100, 200, 100));
-                plot_ui.line(line);
-            });
+        Plot::new("ft_plot").view_aspect(2.5).show(ui, |plot_ui| {
+            let ys: Vec<[f64; 2]> = self
+                .frame_times
+                .iter()
+                .enumerate()
+                .map(|(i, dt)| [i as f64, (*dt * 1000.0) as f64])
+                .collect();
+            let line = Line::new(PlotPoints::new(ys)).color(Color32::from_rgb(100, 200, 100));
+            plot_ui.line(line);
+        });
 
         ui.separator();
         ui.collapsing("Systems (ms)", |ui| {
