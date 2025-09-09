@@ -3,7 +3,6 @@
 # Override via environment variable: CARGO_PROFILE_DEV_DEBUG=1 for local development
 rustflags = [
   "-C", "debuginfo=0",     # Reduce build time and disk usage in CI
-  "-C", "strip=debuginfo", # Strip debug symbols in release builds
 ]
 # Use all available cores (auto-detect) - removed jobs=0 as it's invalid
 
