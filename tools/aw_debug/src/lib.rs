@@ -4,11 +4,9 @@ use egui::{self, Color32};
 use egui_plot::{Line, Plot, PlotPoints};
 use notify::{Event, RecommendedWatcher, RecursiveMode, Watcher};
 use std::{
-    fs,
     path::PathBuf,
-    time::{Duration, Instant},
+    time::Instant,
 };
-use tracing::{error, info};
 use tracing_subscriber::prelude::*;
 
 /// Simple perf HUD state
@@ -176,7 +174,7 @@ pub fn watch_reload_signal(
     content_dir: PathBuf,
     on_reload: impl Fn() + Send + 'static,
 ) -> Result<RecommendedWatcher> {
-    let signal_path = content_dir.join("reload.signal");
+    let _signal_path = content_dir.join("reload.signal");
 
     let mut watcher = notify::recommended_watcher(move |res| {
         if let Ok(event) = res {

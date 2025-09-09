@@ -59,6 +59,10 @@ EXCLUDED_CRATES=(
     "combat_physics_demo"
     "navmesh_demo"
     "physics_demo3d"
+    "debug_toolkit_demo"
+    "aw_debug"
+    "aw_editor"
+    "aw_asset_cli"
 )
 
 # Platform-specific optimizations

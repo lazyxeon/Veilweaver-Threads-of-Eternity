@@ -66,7 +66,8 @@ jobs:
       - name: Setup Rust cache
         uses: Swatinem/rust-cache@v2
         with:
-          key: ci-${{ matrix.os }}-v4
+          workspaces: "."
+          key: ci-${{ matrix.os }}-v5
           cache-all-crates: true
           cache-directories: |
             ~/.cargo/bin/
@@ -124,7 +125,8 @@ jobs:
       - name: Set up Rust cache
         uses: Swatinem/rust-cache@v2
         with:
-          key: build-${{ matrix.os }}-v4
+          workspaces: "."
+          key: build-${{ matrix.os }}-v5
           cache-all-crates: true
           cache-directories: |
             ~/.cargo/bin/
@@ -223,7 +225,8 @@ jobs:
       - name: Set up Rust cache
         uses: Swatinem/rust-cache@v2
         with:
-          key: test-${{ matrix.os }}-v4
+          workspaces: "."
+          key: test-${{ matrix.os }}-v5
           cache-all-crates: true
 
       # ---- Run tests ----
@@ -261,7 +264,8 @@ jobs:
       - name: Set up Rust cache
         uses: Swatinem/rust-cache@v2
         with:
-          key: linting-v4
+          workspaces: "."
+          key: linting-v5
           cache-all-crates: true
 
       # ---- Code formatting ----
@@ -292,7 +296,8 @@ jobs:
       - name: Set up Rust cache
         uses: Swatinem/rust-cache@v2
         with:
-          key: security-v4
+          workspaces: "."
+          key: security-v5
           cache-all-crates: true
 
       - name: Install cargo-audit
@@ -342,7 +347,8 @@ jobs:
       - name: Set up Rust cache
         uses: Swatinem/rust-cache@v2
         with:
-          key: msrv-${{ steps.msrv.outputs.version }}-v4
+          workspaces: "."
+          key: msrv-${{ steps.msrv.outputs.version }}-v5
 
       - name: Check MSRV compatibility
         run: >
@@ -377,7 +383,8 @@ jobs:
       - name: Set up Rust cache
         uses: Swatinem/rust-cache@v2
         with:
-          key: demo-v4
+          workspaces: "."
+          key: demo-v5
           cache-all-crates: true
 
       - name: Build hello_companion demo

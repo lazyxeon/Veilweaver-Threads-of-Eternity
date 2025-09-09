@@ -37,7 +37,7 @@ env:
   CARGO_INCREMENTAL: 0  # Better for CI with sccache
   RUST_BACKTRACE: short
   # Consistent exclusion list for problematic crates
-  EXCLUDED_PACKAGES: "--exclude astraweave-author --exclude visual_3d --exclude ui_controls_demo --exclude npc_town_demo --exclude rhai_authoring --exclude cutscene_render_demo --exclude weaving_playground --exclude combat_physics_demo --exclude navmesh_demo --exclude physics_demo3d"
+  EXCLUDED_PACKAGES: "--exclude astraweave-author --exclude visual_3d --exclude ui_controls_demo --exclude npc_town_demo --exclude rhai_authoring --exclude cutscene_render_demo --exclude weaving_playground --exclude combat_physics_demo --exclude navmesh_demo --exclude physics_demo3d --exclude debug_toolkit_demo --exclude aw_debug --exclude aw_editor --exclude aw_asset_cli"
 
 jobs:
   dependency-audit:
@@ -57,7 +57,8 @@ jobs:
       - name: Setup Rust cache
         uses: Swatinem/rust-cache@v2
         with:
-          key: audit-cache-v2
+          workspaces: "."
+          key: audit-cache-v3
           save-if: ${{ github.ref == 'refs/heads/main' }}
 
       - name: Install audit tools
@@ -156,36 +157,10 @@ jobs:
 
       - name: Install sccache
         run: |
-          # Select correct artifact per OS/arch
-          if [[ "$RUNNER_OS" == "Linux" ]]; then
-            if [[ "$(uname -m)" == "aarch64" ]]; then
-              SCCACHE_ARCH="aarch64-unknown-linux-musl"
-            else
-              SCCACHE_ARCH="x86_64-unknown-linux-musl"
-            fi
-          elif [[ "$RUNNER_OS" == "macOS" ]]; then
-            if [[ "$(uname -m)" == "arm64" ]]; then
-              SCCACHE_ARCH="aarch64-apple-darwin"
-            else
-              SCCACHE_ARCH="x86_64-apple-darwin"
-            fi
-          elif [[ "$RUNNER_OS" == "Windows" ]]; then
-            SCCACHE_ARCH="x86_64-pc-windows-msvc"
-          fi
-
-          SCCACHE_VERSION="v0.10.0"
-          URL="https://github.com/mozilla/sccache/releases/download/${SCCACHE_VERSION}/sccache-${SCCACHE_VERSION}-${SCCACHE_ARCH}.tar.gz"
-
-          echo "Downloading $URL"
-          curl -L "$URL" -o sccache.tar.gz
-          tar -xzf sccache.tar.gz
-
-          mkdir -p ~/.cargo/bin
-          if compgen -G "sccache-*/sccache.exe" > /dev/null; then
-            mv sccache-*/sccache.exe ~/.cargo/bin/
-          else
-            sudo mv sccache-*/sccache /usr/local/bin/ || mv sccache-*/sccache ~/.cargo/bin/
-          fi
+          # Install sccache using cargo for simplicity and reliability
+          cargo install sccache --locked || echo "sccache already installed"
+          
+          # Add cargo bin to PATH for all environments
           echo "$HOME/.cargo/bin" >> $GITHUB_PATH
 
       - name: Cache cleanup (if requested)
@@ -199,7 +174,8 @@ jobs:
       - name: Setup optimized cache
         uses: Swatinem/rust-cache@v2
         with:
-          key: cache-mgmt-${{ matrix.os }}-v3
+          workspaces: "."
+          key: cache-mgmt-${{ matrix.os }}-v4
           cache-all-crates: true
           cache-directories: |
             ~/.cargo/bin/
@@ -264,7 +240,8 @@ jobs:
       - name: Setup Rust cache
         uses: Swatinem/rust-cache@v2
         with:
-          key: analysis-cache-v2
+          workspaces: "."
+          key: analysis-cache-v3
           save-if: ${{ github.ref == 'refs/heads/main' }}
 
       - name: Install analysis tools
@@ -358,7 +335,8 @@ jobs:
       - name: Setup cache for profiling
         uses: Swatinem/rust-cache@v2
         with:
-          key: profiling-cache-v2
+          workspaces: "."
+          key: profiling-cache-v3
           save-if: ${{ github.ref == 'refs/heads/main' }}
 
       - name: Profile build performance
