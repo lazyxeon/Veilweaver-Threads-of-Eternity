@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1757433044203,
+  "lastUpdate": 1757433429273,
   "repoUrl": "https://github.com/lazyxeon/AstraWeave-AI-Native-Gaming-Engine",
   "entries": {
     "Rust Benchmark": [
@@ -126,6 +126,72 @@ window.BENCHMARK_DATA = {
           {
             "name": "binding_set_creation",
             "value": 672,
+            "range": "± 1",
+            "unit": "ns/iter"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "198982749+Copilot@users.noreply.github.com",
+            "name": "Copilot",
+            "username": "Copilot"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c9dee117254f15b6375e55c0f490080e3f2e6661",
+          "message": "Fix Optimized Rust Build with Advanced Caching workflow to properly build and run (#43)\n\n* Initial plan\n\n* Fix all code formatting, clippy warnings, and workflow configuration issues\n\nCo-authored-by: lazyxeon <79929721+lazyxeon@users.noreply.github.com>\n\n* Optimize benchmark execution to include all available benchmark targets\n\nCo-authored-by: lazyxeon <79929721+lazyxeon@users.noreply.github.com>\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>\nCo-authored-by: lazyxeon <79929721+lazyxeon@users.noreply.github.com>",
+          "timestamp": "2025-09-09T11:13:10-04:00",
+          "tree_id": "405a6ede32abb4c3d1ac3ad012aff15fab61d672",
+          "url": "https://github.com/lazyxeon/AstraWeave-AI-Native-Gaming-Engine/commit/c9dee117254f15b6375e55c0f490080e3f2e6661"
+        },
+        "date": 1757433428165,
+        "tool": "cargo",
+        "benches": [
+          {
+            "name": "world_creation",
+            "value": 56,
+            "range": "± 2",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "entity_spawning",
+            "value": 23484,
+            "range": "± 76",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "world_tick",
+            "value": 54,
+            "range": "± 0",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "binding_creation",
+            "value": 2,
+            "range": "± 0",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "binding_serialization",
+            "value": 66,
+            "range": "± 0",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "binding_deserialization",
+            "value": 102,
+            "range": "± 0",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "binding_set_creation",
+            "value": 669,
             "range": "± 1",
             "unit": "ns/iter"
           }
