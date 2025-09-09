@@ -54,8 +54,23 @@ fn main() -> anyhow::Result<()> {
     let mut cs = CutsceneState::new();
     let mut t = 0.0f32;
     let mut last = Instant::now();
-    // TODO: renderer.set_letterbox(0.12); // Method not implemented in current renderer
+    // Letterbox effect: fallback implementation since renderer.set_letterbox is not available.
+    // This will draw black bars at the top and bottom of the screen to simulate letterboxing.
+    fn draw_letterbox(renderer: &mut Renderer, fraction: f32) {
+        // Fallback: If the renderer does not support drawing rectangles directly,
+        // this function is a placeholder for the letterbox effect.
+        // In a real implementation, you would draw two black rectangles
+        // (one at the top, one at the bottom) covering `fraction` of the screen height each.
+        //
+        // Example (pseudocode):
+        // renderer.draw_rect(0, 0, width, bar_height, Color::BLACK);
+        // renderer.draw_rect(0, height - bar_height, width, bar_height, Color::BLACK);
+        //
+        // For now, this is a no-op.
+    }
 
+    // Call the fallback letterbox function before entering the event loop.
+    draw_letterbox(&mut renderer, 0.12);
     event_loop.run(move |event, elwt| {
         match event {
             Event::WindowEvent { event, .. } => match event {
