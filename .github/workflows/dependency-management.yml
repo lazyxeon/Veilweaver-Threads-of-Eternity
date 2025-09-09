@@ -68,12 +68,44 @@ jobs:
       - name: Run security audit
         run: |
           echo "Running cargo audit..."
-          cargo audit --ignore RUSTSEC-2020-0071 || echo "Audit completed with warnings"
+          if cargo audit --ignore RUSTSEC-2020-0071; then
+            echo "✅ Cargo audit passed"
+          else
+            echo "⚠️  Cargo audit found issues - check output above"
+          fi
 
       - name: Run cargo-deny check
         run: |
-          echo "Running cargo deny check..."
-          cargo deny check || echo "Deny check completed with warnings"
+          echo "Running cargo deny checks..."
+          # Run individual checks with better error handling
+          
+          echo "Checking bans (duplicate crates, banned dependencies)..."
+          if cargo deny check bans; then
+            echo "✅ Bans check passed"
+          else
+            echo "⚠️  Bans check found issues"
+          fi
+          
+          echo "Checking sources (registry validation)..."
+          if cargo deny check sources; then
+            echo "✅ Sources check passed"
+          else
+            echo "⚠️  Sources check found issues"
+          fi
+          
+          echo "Checking advisories (security vulnerabilities)..."
+          if cargo deny check advisories; then
+            echo "✅ Advisories check passed"
+          else
+            echo "⚠️  Advisories check found issues - review unmaintained dependencies"
+          fi
+          
+          echo "Checking licenses (license compliance)..."
+          if cargo deny check licenses; then
+            echo "✅ License check passed"
+          else
+            echo "⚠️  License check found issues - review license configuration"
+          fi
 
       - name: Generate audit report
         run: |
