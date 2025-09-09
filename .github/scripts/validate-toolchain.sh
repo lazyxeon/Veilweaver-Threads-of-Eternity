@@ -117,7 +117,7 @@ main() {
     # 6. Build validation
     log "Testing core build functionality..."
     validate_step "Core crates check" "cargo check -p astraweave-core -p astraweave-ai -p astraweave-physics"
-    validate_step "Workspace check (excluding problematic)" "cargo check --workspace --exclude debug_toolkit_demo --exclude aw_editor --exclude aw_debug --exclude visual_3d --exclude navmesh_demo --exclude physics_demo3d"
+    validate_step "Workspace check (excluding problematic)" "cargo check-all"
     
     # 7. Code quality
     log "Testing code quality tools..."
