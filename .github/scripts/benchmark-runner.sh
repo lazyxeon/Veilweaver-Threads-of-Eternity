@@ -76,13 +76,8 @@ process_benchmarks() {
                         echo ',' >> "$JSON_FILE"
                     fi
                     
-                    cat >> "$JSON_FILE" << JSON_ENTRY
-{
-  "name": "${pkg}::${bench_name}",
-  "unit": "ns",
-  "value": ${mean_ns}
-}
-JSON_ENTRY
+                    jq -n --arg name "${pkg}::${bench_name}" --argjson value "$mean_ns" \
+                        '{name: $name, unit: "ns", value: $value}' >> "$JSON_FILE"
                     FIRST_ENTRY=false
                     BENCHMARK_COUNT=$((BENCHMARK_COUNT + 1))
                     
