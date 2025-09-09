@@ -5,7 +5,7 @@
 set -euo pipefail
 
 # Configuration
-BENCHMARK_PACKAGES=(astraweave-core astraweave-input)
+BENCHMARK_PACKAGES_STATIC=(astraweave-core astraweave-input)
 RESULTS_DIR="${BENCHMARK_RESULTS_DIR:-benchmark_results}"
 SUMMARY_FILE="$RESULTS_DIR/summary.txt"
 JSON_FILE="$RESULTS_DIR/benchmarks.json"
@@ -26,6 +26,52 @@ log_error() {
 log_success() {
     echo "[SUCCESS] $*" | tee -a "$SUMMARY_FILE"
 }
+
+# Auto-discover packages with benchmarks
+BENCHMARK_PACKAGES=()
+
+# Function to discover benchmark packages
+discover_benchmark_packages() {
+    local discovered_packages=()
+    
+    # Start with static list
+    for pkg in "${BENCHMARK_PACKAGES_STATIC[@]}"; do
+        if [ -d "$pkg/benches" ]; then
+            discovered_packages+=("$pkg")
+        else
+            echo "[WARN] Static package $pkg has no benchmarks directory"
+        fi
+    done
+    
+    # Auto-discover additional packages with benchmarks
+    for pkg_dir in */; do
+        pkg_name=$(basename "$pkg_dir")
+        if [ -d "$pkg_dir/benches" ] && [[ ! " ${BENCHMARK_PACKAGES_STATIC[*]} " =~ " ${pkg_name} " ]]; then
+            # Check if this is a Rust package with benchmarks
+            if [ -f "$pkg_dir/Cargo.toml" ] && grep -q "\[\[bench\]\]" "$pkg_dir/Cargo.toml"; then
+                discovered_packages+=("$pkg_name")
+                echo "[INFO] Auto-discovered benchmark package: $pkg_name"
+            fi
+        fi
+    done
+    
+    # Set the global array
+    BENCHMARK_PACKAGES=("${discovered_packages[@]}")
+    
+    if [ ${#BENCHMARK_PACKAGES[@]} -eq 0 ]; then
+        log_info "No benchmark packages found"
+        return 1
+    fi
+    
+    log_info "Found ${#BENCHMARK_PACKAGES[@]} benchmark packages: ${BENCHMARK_PACKAGES[*]}"
+    return 0
+}
+
+# Discover benchmark packages
+if ! discover_benchmark_packages; then
+    echo "[ERROR] No benchmark packages found!" | tee -a "$SUMMARY_FILE"
+    exit 1
+fi
 
 # Initialize summary file
 {

@@ -95,7 +95,7 @@ jobs:
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         with:
           name: AstraWeave Performance Benchmarks
-          tool: 'customBiggerIsBetter'
+          tool: 'customSmallerIsBetter'
           output-file-path: benchmark_results/benchmarks.json
           github-token: ${{ secrets.GITHUB_TOKEN }}
           auto-push: true
@@ -113,7 +113,7 @@ jobs:
         if: github.event_name == 'pull_request' && hashFiles('benchmark_results/benchmarks.json') != ''
         with:
           name: AstraWeave Performance Benchmarks
-          tool: 'customBiggerIsBetter'
+          tool: 'customSmallerIsBetter'
           output-file-path: benchmark_results/benchmarks.json
           github-token: ${{ secrets.GITHUB_TOKEN }}
           auto-push: false
