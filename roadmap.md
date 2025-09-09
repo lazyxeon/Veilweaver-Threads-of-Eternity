@@ -28,7 +28,7 @@
    * The repository includes a mock or local rule‑based orchestrator and placeholder for LLM calls, but not integration with a real language model API. You need to decide on an AI backend (local model, hosted service) and build wrappers, authentication, and streaming to feed world state and receive plans.
    * Safety, content filtering, latency handling and fallback behaviours should be formalized.
 
-7. **Tools and Pipelines**
+✅7. **Tools and Pipelines**
 
    * Level and encounter editors: Non‑programmers will need tools to author biomes, placement of obstacles, NPCs and “fate threads,” plus scripts for boss phases and director budgets.
    * Asset pipeline: import/convert textures, models, animations, and audio from DCC tools into the engine’s format.
