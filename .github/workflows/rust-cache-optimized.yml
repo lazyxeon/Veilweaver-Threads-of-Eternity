@@ -206,6 +206,7 @@ jobs:
         run: |
           cargo bench --frozen \
             -p astraweave-core \
+            -p astraweave-input \
             -p astraweave-physics \
             -p astraweave-nav \
             --all-features || true  # Continue on benchmark failure
