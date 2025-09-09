@@ -182,6 +182,101 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="tool-validation-system"><a class="header" href="#tool-validation-system">Tool Validation System</a></h1>
+<p>The AstraWeave LLM integration includes a comprehensive tool validation system that ensures LLM-generated plans are safe and comply with the game's allowed actions.</p>
+<h2 id="overview"><a class="header" href="#overview">Overview</a></h2>
+<p>The tool validation system works in three layers:</p>
+<ol>
+<li><strong>Schema Validation</strong>: Ensures JSON structure matches expected format</li>
+<li><strong>Tool Registry Validation</strong>: Verifies all actions are in the allowed tool set</li>
+<li><strong>Engine Validation</strong>: Runtime checks for cooldowns, line-of-sight, and other constraints</li>
+</ol>
+<h2 id="components"><a class="header" href="#components">Components</a></h2>
+<h3 id="toolregistry"><a class="header" href="#toolregistry">ToolRegistry</a></h3>
+<p>The <code>ToolRegistry</code> defines which tools are available to the LLM:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub struct ToolRegistry {
+    pub tools: Vec&lt;ToolSpec&gt;,
+    pub constraints: Constraints,
+}
+
+pub struct ToolSpec {
+    pub name: String,
+    pub args: BTreeMap&lt;String, String&gt;, // argument name -&gt; type
+}
+<span class="boring">}</span></code></pre></pre>
+<h3 id="validation-process"><a class="header" href="#validation-process">Validation Process</a></h3>
+<ol>
+<li><strong>LLM Response Parsing</strong>: Parse the JSON response into a <code>PlanIntent</code></li>
+<li><strong>Tool Allowlist Check</strong>: Verify each action is in the registry</li>
+<li><strong>Type Validation</strong>: Ensure arguments match expected types (future enhancement)</li>
+<li><strong>Runtime Validation</strong>: Engine checks constraints during execution</li>
+</ol>
+<h3 id="supported-actions"><a class="header" href="#supported-actions">Supported Actions</a></h3>
+<ul>
+<li><strong>MoveTo</strong>: Move companion to specified coordinates</li>
+<li><strong>Throw</strong>: Throw items (smoke, grenade) at target location</li>
+<li><strong>CoverFire</strong>: Provide covering fire at target for duration</li>
+<li><strong>Revive</strong>: Revive allied units</li>
+</ul>
+<h3 id="error-handling"><a class="header" href="#error-handling">Error Handling</a></h3>
+<p>The system provides clear error messages for validation failures:</p>
+<ul>
+<li>Invalid JSON format</li>
+<li>Disallowed tools used by LLM</li>
+<li>Missing required arguments</li>
+<li>Type mismatches (future)</li>
+</ul>
+<h3 id="security-features"><a class="header" href="#security-features">Security Features</a></h3>
+<ul>
+<li><strong>Allowlist-only</strong>: Only pre-approved actions can be executed</li>
+<li><strong>No dynamic code execution</strong>: All actions are statically defined</li>
+<li><strong>Input sanitization</strong>: JSON parsing prevents injection attacks</li>
+<li><strong>Constraint enforcement</strong>: Runtime validation prevents illegal moves</li>
+</ul>
+<h2 id="usage-example"><a class="header" href="#usage-example">Usage Example</a></h2>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use astraweave_llm::{parse_llm_plan, MockLlm, plan_from_llm};
+
+// Create tool registry
+let registry = ToolRegistry {
+    tools: vec![
+        ToolSpec {
+            name: "move_to".into(),
+            args: [("x", "i32"), ("y", "i32")].into_iter().collect(),
+        }
+    ],
+    constraints: Constraints::default(),
+};
+
+// Parse and validate LLM response
+let plan = parse_llm_plan(llm_response, &amp;registry)?;
+
+// Full end-to-end validation
+let plan = plan_from_llm(&amp;client, &amp;world_snapshot, &amp;registry).await?;
+<span class="boring">}</span></code></pre></pre>
+<h2 id="testing"><a class="header" href="#testing">Testing</a></h2>
+<p>The validation system includes comprehensive tests covering:</p>
+<ul>
+<li>Valid plan parsing</li>
+<li>Invalid JSON handling</li>
+<li>Disallowed tool detection</li>
+<li>Empty plan handling</li>
+<li>All action types</li>
+<li>Error message verification</li>
+</ul>
+<p>Run tests with:</p>
+<pre><code class="language-bash">cargo test -p astraweave-llm
+</code></pre>
+<h2 id="future-enhancements"><a class="header" href="#future-enhancements">Future Enhancements</a></h2>
+<ul>
+<li>Argument type validation</li>
+<li>Parameter range checking</li>
+<li>Cost/resource validation</li>
+<li>Complex constraint evaluation</li>
+<li>Custom validation plugins</li>
+</ul>
 
                     </main>
 
