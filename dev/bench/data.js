@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1757427220467,
+  "lastUpdate": 1757427422110,
   "repoUrl": "https://github.com/lazyxeon/AstraWeave-AI-Native-Gaming-Engine",
   "entries": {
     "Rust Benchmark": [
@@ -123,6 +123,72 @@ window.BENCHMARK_DATA = {
             "name": "binding_set_creation",
             "value": 663,
             "range": "± 12",
+            "unit": "ns/iter"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "198982749+Copilot@users.noreply.github.com",
+            "name": "Copilot",
+            "username": "Copilot"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7f48db68f6dd13664da6eb54e91bdbc6d93f8bde",
+          "message": "Complete LLM Integration Implementation with Comprehensive Testing and Validation (#40)\n\n* Initial plan\n\n* Complete LLM integration implementation with comprehensive testing and validation\n\nCo-authored-by: lazyxeon <79929721+lazyxeon@users.noreply.github.com>\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>\nCo-authored-by: lazyxeon <79929721+lazyxeon@users.noreply.github.com>",
+          "timestamp": "2025-09-09T10:06:18-04:00",
+          "tree_id": "16208c92904bc74790ea7e7020e43cf67e788be0",
+          "url": "https://github.com/lazyxeon/AstraWeave-AI-Native-Gaming-Engine/commit/7f48db68f6dd13664da6eb54e91bdbc6d93f8bde"
+        },
+        "date": 1757427420779,
+        "tool": "cargo",
+        "benches": [
+          {
+            "name": "world_creation",
+            "value": 56,
+            "range": "± 0",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "entity_spawning",
+            "value": 23565,
+            "range": "± 41",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "world_tick",
+            "value": 54,
+            "range": "± 0",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "binding_creation",
+            "value": 2,
+            "range": "± 0",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "binding_serialization",
+            "value": 67,
+            "range": "± 0",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "binding_deserialization",
+            "value": 99,
+            "range": "± 0",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "binding_set_creation",
+            "value": 668,
+            "range": "± 0",
             "unit": "ns/iter"
           }
         ]
