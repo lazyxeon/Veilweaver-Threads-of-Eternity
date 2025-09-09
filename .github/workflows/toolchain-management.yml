@@ -59,7 +59,7 @@ jobs:
             toolchain: nightly
             experimental: true
         exclude:
-          # Skip some combinations to reduce CI time and cost
+          # Skip beta/older versions on Windows/macOS to reduce CI time and cost
           - os: windows-latest
             toolchain: beta
           - os: windows-latest  
