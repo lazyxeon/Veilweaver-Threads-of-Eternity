@@ -179,19 +179,34 @@ The system tracks:
 ### Common Issues
 
 1. **Benchmarks fail to compile**
-   - Check system dependencies are installed
+   - Check system dependencies are installed (especially `libudev-dev` for input crates)
    - Verify Rust toolchain version
    - Check for conflicting dependencies
+   - Ensure all required system packages: `build-essential`, `pkg-config`, `cmake`, `ninja-build`, graphics libraries
 
 2. **Performance inconsistency**
    - Ensure consistent test environment
    - Check for background processes
    - Consider hardware variations
+   - Verify criterion baseline exists (run benchmarks twice)
 
 3. **Timeout errors**
-   - Benchmarks are limited to 45 minutes
+   - Benchmarks are limited to 45 minutes total, 10 minutes per package
    - Large workspace can cause timeouts
    - Check for infinite loops in benchmark code
+   - Monitor compilation time and cache effectiveness
+
+4. **Missing benchmark results**
+   - Verify benchmark packages are correctly listed in `BENCHMARK_PACKAGES`
+   - Check that `[[bench]]` entries exist in `Cargo.toml` files
+   - Ensure criterion results directory structure is correct
+   - Look for JSON parsing errors in criterion output
+
+5. **GitHub Action failures**
+   - Check that all system dependencies are installed in workflow
+   - Verify benchmark action version compatibility
+   - Ensure proper artifact upload permissions
+   - Review cache configuration for effectiveness
 
 ### Debug Mode
 
