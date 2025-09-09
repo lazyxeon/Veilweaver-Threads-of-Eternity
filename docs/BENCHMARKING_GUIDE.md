@@ -75,15 +75,17 @@ Performance metrics are reported in nanoseconds (ns) and automatically converted
 
 ### Expected Performance Ranges
 
+> **Note:** The following performance ranges are preliminary estimates and may not reflect real-world results. Please validate against actual benchmark data for your environment.
+
 | Benchmark | Expected Range | Notes |
 |-----------|----------------|-------|
-| world_creation | 50-100 ns | Should be very fast |
-| entity_spawning | 15-30 µs | Per 100 entities |
-| world_tick | 40-80 ns | Single tick, empty world |
-| binding_creation | 2-5 ns | Simple structure creation |
-| binding_serialization | 50-100 ns | JSON serialization |
-| binding_deserialization | 80-150 ns | JSON parsing |
-| binding_set_creation | 500-1000 ns | Complex structure |
+| world_creation | 50-100 ns | Preliminary estimate; should be very fast |
+| entity_spawning | 15-30 µs | Preliminary estimate; per 100 entities |
+| world_tick | 40-80 ns | Preliminary estimate; single tick, empty world |
+| binding_creation | 2-5 ns | Preliminary estimate; simple structure creation |
+| binding_serialization | 50-100 ns | Preliminary estimate; JSON serialization |
+| binding_deserialization | 80-150 ns | Preliminary estimate; JSON parsing |
+| binding_set_creation | 500-1000 ns | Preliminary estimate; complex structure |
 
 ## Local Development
 
