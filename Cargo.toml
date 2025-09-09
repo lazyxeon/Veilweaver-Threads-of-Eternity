@@ -51,6 +51,10 @@ members = [
   # persistence
   "persistence/aw-save",
   "tools/aw_save_cli",
+  # Enhanced networking layer
+  "net/aw-net-proto",
+  "net/aw-net-server",
+  "net/aw-net-client",
 ]
 resolver = "2"
 
