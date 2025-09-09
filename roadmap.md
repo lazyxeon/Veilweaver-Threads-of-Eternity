@@ -23,7 +23,7 @@
    * There’s no menu system, HUD, inventory screen, map/quest log, crafting interface or accessibility options. These would need to be designed and integrated with the engine.
    * Input handling beyond simple key or mouse events (controller support, remapping, touch) must be added.
 
-6. **AI Model Integration**
+✅6. **AI Model Integration**
 
    * The repository includes a mock or local rule‑based orchestrator and placeholder for LLM calls, but not integration with a real language model API. You need to decide on an AI backend (local model, hosted service) and build wrappers, authentication, and streaming to feed world state and receive plans.
    * Safety, content filtering, latency handling and fallback behaviours should be formalized.
