@@ -10,14 +10,8 @@ rustflags = [
 # Enable sccache for faster compilation when available
 # Set via environment variable: RUSTC_WRAPPER=sccache in CI
 # rustc-wrapper = "sccache"
-
+rustflags = ["-C", "target-cpu=native"]
 # Optimize for native CPU features in release builds
-[target.'cfg(not(target_env = "msvc"))']
-rustflags = ["-C", "target-cpu=native"]
-
-[target.'cfg(target_env = "msvc")']
-rustflags = ["-C", "target-cpu=native"]
-
 [term]
 color = "always"
 progress.when = "auto"
