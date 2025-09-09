@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1757428234680,
+  "lastUpdate": 1757430910397,
   "repoUrl": "https://github.com/lazyxeon/AstraWeave-AI-Native-Gaming-Engine",
   "entries": {
     "Rust Benchmark": [
@@ -131,6 +131,68 @@ window.BENCHMARK_DATA = {
             "name": "binding_set_creation",
             "value": 726,
             "range": "± 1",
+            "unit": "ns/iter"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "lazyxeon",
+            "username": "lazyxeon"
+          },
+          "committer": {
+            "name": "lazyxeon",
+            "username": "lazyxeon"
+          },
+          "id": "4f7fe8ddcf47ba5070f79d5b4034771b0878d976",
+          "message": "[WIP] please analyze my repo and revise all files that need to be revised in order for my rust toolchain management workflow to properly build and run. align all revisions with best practices, and develop bespoke solutions not cookie cutter should work solut...",
+          "timestamp": "2025-09-09T14:10:57Z",
+          "url": "https://github.com/lazyxeon/AstraWeave-AI-Native-Gaming-Engine/pull/41/commits/4f7fe8ddcf47ba5070f79d5b4034771b0878d976"
+        },
+        "date": 1757430909897,
+        "tool": "cargo",
+        "benches": [
+          {
+            "name": "world_creation",
+            "value": 56,
+            "range": "± 2",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "entity_spawning",
+            "value": 23577,
+            "range": "± 128",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "world_tick",
+            "value": 54,
+            "range": "± 1",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "binding_creation",
+            "value": 2,
+            "range": "± 0",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "binding_serialization",
+            "value": 66,
+            "range": "± 0",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "binding_deserialization",
+            "value": 99,
+            "range": "± 0",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "binding_set_creation",
+            "value": 659,
+            "range": "± 0",
             "unit": "ns/iter"
           }
         ]
