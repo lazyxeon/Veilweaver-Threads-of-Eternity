@@ -122,7 +122,7 @@ main() {
     # 7. Code quality
     log "Testing code quality tools..."
     validate_step "Format check" "cargo fmt --all -- --check"
-    validate_step "Clippy check" "cargo clippy --workspace --exclude debug_toolkit_demo --exclude aw_editor --exclude aw_debug --exclude visual_3d --exclude navmesh_demo --exclude physics_demo3d --all-features --all-targets"
+    validate_step "Clippy check" "cargo clippy-all"
     
     # 8. Script validation
     log "Validating build scripts..."
