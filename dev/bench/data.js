@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1757432323534,
+  "lastUpdate": 1757432464623,
   "repoUrl": "https://github.com/lazyxeon/AstraWeave-AI-Native-Gaming-Engine",
   "entries": {
     "Rust Benchmark": [
@@ -246,6 +246,68 @@ window.BENCHMARK_DATA = {
           {
             "name": "binding_set_creation",
             "value": 661,
+            "range": "± 1",
+            "unit": "ns/iter"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "lazyxeon",
+            "username": "lazyxeon"
+          },
+          "committer": {
+            "name": "lazyxeon",
+            "username": "lazyxeon"
+          },
+          "id": "237ab9f9438542c51b25cd6ac7a8a269426dba14",
+          "message": "Fix compilation issues and remove CI exclusions - enable comprehensive workspace builds",
+          "timestamp": "2025-09-09T14:10:57Z",
+          "url": "https://github.com/lazyxeon/AstraWeave-AI-Native-Gaming-Engine/pull/44/commits/237ab9f9438542c51b25cd6ac7a8a269426dba14"
+        },
+        "date": 1757432463454,
+        "tool": "cargo",
+        "benches": [
+          {
+            "name": "world_creation",
+            "value": 56,
+            "range": "± 0",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "entity_spawning",
+            "value": 23493,
+            "range": "± 62",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "world_tick",
+            "value": 54,
+            "range": "± 1",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "binding_creation",
+            "value": 2,
+            "range": "± 0",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "binding_serialization",
+            "value": 66,
+            "range": "± 0",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "binding_deserialization",
+            "value": 105,
+            "range": "± 0",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "binding_set_creation",
+            "value": 667,
             "range": "± 1",
             "unit": "ns/iter"
           }
