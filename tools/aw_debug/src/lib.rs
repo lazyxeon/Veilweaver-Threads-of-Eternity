@@ -1,6 +1,7 @@
 use anyhow::Result;
 use crossbeam_channel::{unbounded, Receiver, Sender};
 use egui::{self, Color32};
+use egui_plot::{Line, Plot, PlotPoints};
 use notify::{Event, RecommendedWatcher, RecursiveMode, Watcher};
 use std::{
     fs,
@@ -8,6 +9,7 @@ use std::{
     time::{Duration, Instant},
 };
 use tracing::{error, info};
+use tracing_subscriber::prelude::*;
 
 /// Simple perf HUD state
 pub struct PerfHud {
@@ -50,7 +52,7 @@ impl PerfHud {
         ui.label(format!("FPS: {:.1}", self.fps));
         ui.label(format!("Entities: {}", self.entity_count));
 
-        egui::plot::Plot::new("ft_plot")
+        Plot::new("ft_plot")
             .view_aspect(2.5)
             .show(ui, |plot_ui| {
                 let ys: Vec<[f64; 2]> = self
@@ -59,7 +61,7 @@ impl PerfHud {
                     .enumerate()
                     .map(|(i, dt)| [i as f64, (*dt * 1000.0) as f64])
                     .collect();
-                let line = egui::plot::Line::new(egui::plot::PlotPoints::new(ys))
+                let line = Line::new(PlotPoints::new(ys))
                     .color(Color32::from_rgb(100, 200, 100));
                 plot_ui.line(line);
             });
