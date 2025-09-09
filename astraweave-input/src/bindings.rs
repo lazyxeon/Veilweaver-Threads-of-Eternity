@@ -35,7 +35,7 @@ pub enum AxisKind {
     RT,
 }
 
-#[derive(Clone, Debug, Serialize, Deserialize, Default)]
+#[derive(Clone, Debug, Default, Serialize, Deserialize)]
 pub struct Binding {
     pub key: Option<KeyCode>,
     pub mouse: Option<MouseButton>,
