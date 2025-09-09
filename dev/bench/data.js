@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1757380063445,
+  "lastUpdate": 1757426942801,
   "repoUrl": "https://github.com/lazyxeon/AstraWeave-AI-Native-Gaming-Engine",
   "entries": {
     "Rust Benchmark": [
@@ -65,6 +65,68 @@ window.BENCHMARK_DATA = {
             "name": "binding_set_creation",
             "value": 667,
             "range": "± 1",
+            "unit": "ns/iter"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "lazyxeon",
+            "username": "lazyxeon"
+          },
+          "committer": {
+            "name": "lazyxeon",
+            "username": "lazyxeon"
+          },
+          "id": "09f77612d16e2c5b50fa8e9398f8354dce777791",
+          "message": "[WIP] please analyze my repo and develop an executive summary and high level pitch of Astraweave",
+          "timestamp": "2025-09-08T23:36:03Z",
+          "url": "https://github.com/lazyxeon/AstraWeave-AI-Native-Gaming-Engine/pull/36/commits/09f77612d16e2c5b50fa8e9398f8354dce777791"
+        },
+        "date": 1757426942298,
+        "tool": "cargo",
+        "benches": [
+          {
+            "name": "world_creation",
+            "value": 56,
+            "range": "± 0",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "entity_spawning",
+            "value": 23714,
+            "range": "± 75",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "world_tick",
+            "value": 54,
+            "range": "± 1",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "binding_creation",
+            "value": 2,
+            "range": "± 0",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "binding_serialization",
+            "value": 66,
+            "range": "± 0",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "binding_deserialization",
+            "value": 99,
+            "range": "± 0",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "binding_set_creation",
+            "value": 668,
+            "range": "± 2",
             "unit": "ns/iter"
           }
         ]
