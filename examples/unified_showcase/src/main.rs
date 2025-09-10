@@ -224,6 +224,9 @@ impl NavMesh {
 fn main() -> Result<()> {
     println!("🌟 AstraWeave Unified Showcase Demo");
     println!("📋 Features: 3D Rendering | Physics | Navigation | Audio | UI");
+    println!("🎮 Controls: Right-click + move mouse to look, WASD to move, P to pause physics, T to teleport sphere");
+    println!("⚡ Starting demo...");
+    println!();
 
     // Window & event loop
     let event_loop = EventLoop::new()?;
