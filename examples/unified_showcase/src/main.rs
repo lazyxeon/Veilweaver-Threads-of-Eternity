@@ -145,6 +145,8 @@ struct UiState {
     fake_reflections: bool,
     fps_text: String,
     info_text: String,
+    current_texture_pack: String,
+    available_texture_packs: Vec<String>,
 }
 
 impl Default for UiState {
@@ -160,6 +162,8 @@ impl Default for UiState {
             fake_reflections: false,
             fps_text: String::new(),
             info_text: "AstraWeave Unified Showcase".to_string(),
+            current_texture_pack: "grassland".to_string(),
+            available_texture_packs: vec!["grassland".to_string(), "desert".to_string()],
         }
     }
 }
@@ -316,6 +320,143 @@ fn load_texture_from_file(
     load_texture_from_bytes(device, queue, &bytes, &path.to_string_lossy())
 }
 
+fn reload_texture_pack(
+    render: &mut RenderStuff, 
+    texture_pack_name: &str
+) -> Result<()> {
+    // Load texture pack configuration
+    let pack_path = Path::new("assets_src/environments").join(format!("{}.toml", texture_pack_name));
+    let pack = load_texture_pack(&pack_path)?;
+    
+    // Load the ground texture specified in the pack
+    let texture_name = if pack.ground.texture.ends_with(".ktx2") {
+        // Convert .ktx2 reference to .png for now
+        pack.ground.texture.replace(".ktx2", ".png")
+    } else {
+        pack.ground.texture.clone()
+    };
+    
+    let texture_path = Path::new("assets").join(&texture_name);
+    println!("Loading texture pack '{}' with ground texture: {}", texture_pack_name, texture_path.display());
+    
+    match load_texture_from_file(&render.device, &render.queue, &texture_path) {
+        Ok(new_texture) => {
+            // Create new bind group with the loaded texture
+            let new_bind_group = render.device.create_bind_group(&wgpu::BindGroupDescriptor {
+                label: Some(&format!("{}-texture-bg", texture_pack_name)),
+                layout: &render.texture_bind_group_layout,
+                entries: &[
+                    wgpu::BindGroupEntry {
+                        binding: 0,
+                        resource: wgpu::BindingResource::TextureView(&new_texture.view),
+                    },
+                    wgpu::BindGroupEntry {
+                        binding: 1,
+                        resource: wgpu::BindingResource::Sampler(&new_texture.sampler),
+                    },
+                ],
+            });
+            
+            // Update render state
+            render.ground_texture = Some(new_texture);
+            render.ground_bind_group = Some(new_bind_group);
+            
+            println!("Successfully loaded texture pack: {}", texture_pack_name);
+            Ok(())
+        }
+        Err(e) => {
+            println!("Failed to load texture for pack '{}': {}", texture_pack_name, e);
+            Err(e)
+        }
+    }
+}
+
+fn generate_environment_objects(physics: &mut Physics, texture_pack_name: &str) {
+    // Clear existing objects (keep ground and first few objects as player/sphere)
+    let mut handles_to_remove = Vec::new();
+    for (handle, body) in physics.bodies.iter() {
+        if body.user_data > 2 { // Keep player objects (user_data 1, 2)
+            handles_to_remove.push(handle);
+        }
+    }
+    
+    for handle in handles_to_remove {
+        physics.bodies.remove(handle, &mut physics.islands, &mut physics.colliders, &mut physics.impulse_joints, &mut physics.multibody_joints, true);
+    }
+    
+    // Generate environment-specific objects
+    match texture_pack_name {
+        "grassland" => {
+            // Add some trees (tall green boxes)
+            for i in 0..8 {
+                let x = -10.0 + (i as f32) * 3.0 + (i as f32 * 0.7).sin() * 2.0;
+                let z = -5.0 + (i as f32 * 0.9).cos() * 3.0;
+                
+                let tree_rb = r3::RigidBodyBuilder::fixed()
+                    .translation(nalgebra::Vector3::new(x, -1.5, z))
+                    .user_data(10 + i).build();
+                let tree_handle = physics.bodies.insert(tree_rb);
+                let tree_col = r3::ColliderBuilder::cuboid(0.3, 1.5, 0.3).build();
+                physics.colliders.insert_with_parent(tree_col, tree_handle, &mut physics.bodies);
+            }
+            
+            // Add some cottages (wider boxes)
+            for i in 0..3 {
+                let x = 5.0 + (i as f32) * 4.0;
+                let z = 2.0 + (i as f32).sin() * 1.5;
+                
+                let house_rb = r3::RigidBodyBuilder::fixed()
+                    .translation(nalgebra::Vector3::new(x, -1.0, z))
+                    .user_data(20 + i).build();
+                let house_handle = physics.bodies.insert(house_rb);
+                let house_col = r3::ColliderBuilder::cuboid(1.5, 1.0, 1.0).build();
+                physics.colliders.insert_with_parent(house_col, house_handle, &mut physics.bodies);
+            }
+        }
+        "desert" => {
+            // Add some cacti (tall thin green boxes)
+            for i in 0..6 {
+                let x = -8.0 + (i as f32) * 3.5 + (i as f32 * 1.2).sin() * 1.5;
+                let z = -3.0 + (i as f32 * 0.8).cos() * 4.0;
+                
+                let cactus_rb = r3::RigidBodyBuilder::fixed()
+                    .translation(nalgebra::Vector3::new(x, -1.2, z))
+                    .user_data(30 + i).build();
+                let cactus_handle = physics.bodies.insert(cactus_rb);
+                let cactus_col = r3::ColliderBuilder::cuboid(0.2, 1.2, 0.2).build();
+                physics.colliders.insert_with_parent(cactus_col, cactus_handle, &mut physics.bodies);
+            }
+            
+            // Add some adobe houses (sand-colored boxes)
+            for i in 0..2 {
+                let x = 8.0 + (i as f32) * 5.0;
+                let z = 1.0 + (i as f32).cos() * 2.0;
+                
+                let adobe_rb = r3::RigidBodyBuilder::fixed()
+                    .translation(nalgebra::Vector3::new(x, -1.2, z))
+                    .user_data(40 + i).build();
+                let adobe_handle = physics.bodies.insert(adobe_rb);
+                let adobe_col = r3::ColliderBuilder::cuboid(1.2, 0.8, 1.2).build();
+                physics.colliders.insert_with_parent(adobe_col, adobe_handle, &mut physics.bodies);
+            }
+        }
+        _ => {
+            // Default environment - just a few generic objects
+            for i in 0..4 {
+                let x = -5.0 + (i as f32) * 2.5;
+                let z = 3.0;
+                
+                let obj_rb = r3::RigidBodyBuilder::fixed()
+                    .translation(nalgebra::Vector3::new(x, -1.5, z))
+                    .user_data(50 + i).build();
+                let obj_handle = physics.bodies.insert(obj_rb);
+                let obj_col = r3::ColliderBuilder::cuboid(0.5, 1.0, 0.5).build();
+                physics.colliders.insert_with_parent(obj_col, obj_handle, &mut physics.bodies);
+            }
+        }
+    }
+}
+
 // ------------------------------- Main entry -------------------------------
 
 fn main() -> Result<()> {
@@ -332,6 +473,10 @@ async fn run() -> Result<()> {
     // Setup renderer, UI, physics
     let mut render = setup_renderer(window.clone()).await?;
     let mut physics = build_physics_world();
+    
+    // Initialize default environment
+    generate_environment_objects(&mut physics, "grassland");
+    
     let mut instances = build_show_instances();
     let mut ui = UiState::default();
     let mut camera = Camera { pos: Vec3::new(0.0, 0.0, 5.0), yaw: 0.0, pitch: 0.0 };
@@ -412,6 +557,30 @@ async fn run() -> Result<()> {
                                     }
                                 }
                             }
+                            PhysicalKey::Code(KeyCode::Digit1) => {
+                                if pressed {
+                                    let pack_name = "grassland";
+                                    if let Err(e) = reload_texture_pack(&mut render, pack_name) {
+                                        println!("Failed to switch to {} texture pack: {}", pack_name, e);
+                                    } else {
+                                        ui.current_texture_pack = pack_name.to_string();
+                                        ui.info_text = format!("Switched to {} environment", pack_name);
+                                        generate_environment_objects(&mut physics, pack_name);
+                                    }
+                                }
+                            }
+                            PhysicalKey::Code(KeyCode::Digit2) => {
+                                if pressed {
+                                    let pack_name = "desert";
+                                    if let Err(e) = reload_texture_pack(&mut render, pack_name) {
+                                        println!("Failed to switch to {} texture pack: {}", pack_name, e);
+                                    } else {
+                                        ui.current_texture_pack = pack_name.to_string();
+                                        ui.info_text = format!("Switched to {} environment", pack_name);
+                                        generate_environment_objects(&mut physics, pack_name);
+                                    }
+                                }
+                            }
                             _ => {}
                         }
                     }
@@ -478,7 +647,11 @@ async fn run() -> Result<()> {
 
                         // Sync sim to render
                         sync_instances_from_physics(&physics, &mut instances);
-                        render.queue.write_buffer(&render.instance_vb, 0, bytemuck::cast_slice(&instances));
+                        render.instance_count = instances.len() as u32;
+                        
+                        if !instances.is_empty() {
+                            render.queue.write_buffer(&render.instance_vb, 0, bytemuck::cast_slice(&instances));
+                        }
 
                         // Camera uniform
                         let width = (render.surface_cfg.width as f32 * ui.resolution_scale).max(1.0);
@@ -530,7 +703,9 @@ async fn run() -> Result<()> {
                             rp.set_vertex_buffer(0, render.cube_vb.slice(..));
                             rp.set_vertex_buffer(1, render.instance_vb.slice(..));
                             rp.set_index_buffer(render.cube_ib.slice(..), wgpu::IndexFormat::Uint16);
-                            rp.draw_indexed(0..render.cube_index_count, 0, 0..render.instance_count);
+                            if render.instance_count > 0 {
+                                rp.draw_indexed(0..render.cube_index_count, 0, 0..render.instance_count);
+                            }
                         }
                         render.queue.submit(Some(encoder.finish()));
                         frame.present();
@@ -716,10 +891,11 @@ async fn setup_renderer(window: std::sync::Arc<winit::window::Window>) -> Result
         }
     };
 
-    // Instance buffer
+    // Instance buffer (increased size for environment objects)
+    let max_instances = 100;
     let instance_vb = device.create_buffer(&wgpu::BufferDescriptor {
         label: Some("instance-buffer"),
-        size: (std::mem::size_of::<InstanceRaw>() * 26) as u64,
+        size: (std::mem::size_of::<InstanceRaw>() * max_instances) as u64,
         usage: wgpu::BufferUsages::VERTEX | wgpu::BufferUsages::COPY_DST,
         mapped_at_creation: false,
     });
@@ -833,7 +1009,7 @@ async fn setup_renderer(window: std::sync::Arc<winit::window::Window>) -> Result
         camera_ub,
         camera_bg,
         instance_vb,
-        instance_count: 26,
+        instance_count: 0, // Will be updated dynamically
         msaa_samples,
         ground_texture,
         texture_bind_group_layout,
@@ -994,36 +1170,38 @@ fn teleport_sphere_to(p: &mut Physics, pos: Vec3) {
 }
 
 fn sync_instances_from_physics(p: &Physics, out: &mut Vec<InstanceRaw>) {
-    // first 25 are boxes, last is sphere
-    let mut i = 0usize;
+    // Resize output vector to accommodate all objects
+    out.clear();
+    
     for (_, body) in p.bodies.iter() {
-        if body.is_fixed() { continue }
+        if body.is_fixed() && body.user_data == 0 { 
+            continue; // Skip ground
+        }
+        
         let xf = body.position();
         let iso = xf.to_homogeneous();
         let m = Mat4::from_cols_array_2d(&iso.fixed_view::<4,4>(0,0).into());
-        let color = if body.user_data == 2 {
-            [0.1, 0.8, 0.9, 1.0]
-        } else {
-            [0.9, 0.6, 0.2, 1.0]
+        
+        // Color based on object type (user_data)
+        let color = match body.user_data {
+            1 => [0.9, 0.6, 0.2, 1.0],      // Original boxes (orange)
+            2 => [0.1, 0.8, 0.9, 1.0],      // Sphere (cyan)
+            10..=19 => [0.2, 0.8, 0.3, 1.0], // Trees (green)
+            20..=29 => [0.7, 0.5, 0.3, 1.0], // Cottages (brown)
+            30..=39 => [0.3, 0.8, 0.4, 1.0], // Cacti (bright green)
+            40..=49 => [0.8, 0.7, 0.5, 1.0], // Adobe houses (sandy)
+            50..=59 => [0.6, 0.6, 0.6, 1.0], // Generic objects (gray)
+            _ => [0.5, 0.5, 0.5, 1.0],       // Unknown (dark gray)
         };
-        if i < out.len() {
-            out[i].model = m.to_cols_array();
-            out[i].color = color;
-            i += 1;
-        }
+        
+        out.push(InstanceRaw {
+            model: m.to_cols_array(),
+            color,
+        });
     }
 }
 
 fn build_show_instances() -> Vec<InstanceRaw> {
-    let mut v = vec![InstanceRaw { model: [0.0; 16], color: [1.0; 4] }; 26];
-    for (i, inst) in v.iter_mut().enumerate() {
-        let m = Mat4::from_translation(Vec3::new((i as f32) * 0.1, 0.0, 0.0));
-        inst.model = m.to_cols_array();
-        inst.color = if i == 25 {
-            [0.1, 0.8, 0.9, 1.0]
-        } else {
-            [0.9, 0.6, 0.2, 1.0]
-        };
-    }
-    v
+    // Start with empty instances - they'll be populated by physics sync
+    Vec::new()
 }
