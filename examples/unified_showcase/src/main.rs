@@ -52,8 +52,6 @@ struct RenderStuff {
     texture_bind_group_layout: wgpu::BindGroupLayout,
     ground_bind_group: Option<wgpu::BindGroup>,
     ground_normal: Option<LoadedTexture>,
-    ground_norm_bind_group: Option<wgpu::BindGroup>,
-
 }
 
 const DEPTH_FORMAT: wgpu::TextureFormat = wgpu::TextureFormat::Depth24Plus;
