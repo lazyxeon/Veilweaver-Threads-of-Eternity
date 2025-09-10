@@ -849,7 +849,7 @@ async fn setup_renderer(window: std::sync::Arc<winit::window::Window>) -> Result
     });
     
 // when building layouts:
-let texture_bind_group_layout = device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
+texture_bind_group_layout = device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
     label: Some("albedo+normal"),
     entries: &[
         // binding 0: albedo texture
