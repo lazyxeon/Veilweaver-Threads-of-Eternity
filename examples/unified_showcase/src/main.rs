@@ -361,8 +361,21 @@ fn reload_texture_pack(
                         binding: 1,
                         resource: wgpu::BindingResource::Sampler(&new_texture.sampler),
                     },
-          let npath = Path::new("assets").join(texture_name.replace(".png", "_n.png"));
-          let normal_tex = load_texture_from_file(&render.device, &render.queue, &npath)?;
+          // Construct normal map path by replacing extension with _n.png
+          let tex_stem = Path::new(&texture_name)
+              .file_stem()
+              .and_then(|s| s.to_str())
+              .unwrap_or("texture");
+          let npath = Path::new("assets").join(format!("{}_n.png", tex_stem));
+          let normal_tex = if npath.exists() {
+              load_texture_from_file(&render.device, &render.queue, &npath)?
+          } else {
+              eprintln!("Warning: Normal map not found at {}. Using default normal map.", npath.display());
+              // Use a default normal map (e.g., flat normal)
+              // You may need to provide a default normal map in your assets, e.g., "default_n.png"
+              let default_npath = Path::new("assets").join("default_n.png");
+              load_texture_from_file(&render.device, &render.queue, &default_npath)?
+          };
 
 // create bind group with both textures
           let combined_bg = render.device.create_bind_group(&wgpu::BindGroupDescriptor {
