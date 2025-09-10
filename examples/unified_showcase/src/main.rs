@@ -17,6 +17,9 @@ use winit::{
     window::{CursorGrabMode, WindowBuilder},
 };
 
+// Import the proper camera system from astraweave-render
+use astraweave_render::camera::{Camera as RenderCamera, CameraController};
+
 // ------------------------------- Renderer types -------------------------------
 
 #[repr(C)]
@@ -180,71 +183,12 @@ impl Default for UiState {
 }
 
 // ------------------------------- Camera -------------------------------
-
-struct Camera {
-    pos: Vec3,
-    yaw: f32,
-    pitch: f32,
-}
-
-impl Camera {
-    fn view_matrix(&self) -> Mat4 {
-        let forward = Vec3::new(
-            self.yaw.cos() * self.pitch.cos(),
-            self.pitch.sin(),
-            self.yaw.sin() * self.pitch.cos(),
-        )
-        .normalize();
-        Mat4::look_to_rh(self.pos, forward, Vec3::Y)
-    }
-
-    /// Handle keyboard inputs for movement.  Movement is always allowed; right mouse only gates look.
-    fn handle_inputs(&mut self, dt: f32, input: &InputState, speed: f32) {
-        // Compute forward and right vectors from yaw/pitch
-        let forward = Vec3::new(
-            self.yaw.cos() * self.pitch.cos(),
-            self.pitch.sin(),
-            self.yaw.sin() * self.pitch.cos(),
-        )
-        .normalize();
-        let right = forward.cross(Vec3::Y).normalize();
-        let mut v = Vec3::ZERO;
-        if input.key_w {
-            v += forward;
-        }
-        if input.key_s {
-            v -= forward;
-        }
-        if input.key_a {
-            v -= right;
-        }
-        if input.key_d {
-            v += right;
-        }
-        if input.key_space {
-            v += Vec3::Y;
-        }
-        if input.key_ctrl {
-            v -= Vec3::Y;
-        }
-        if v.length_squared() > 0.0 {
-            self.pos += v.normalize() * speed * dt;
-        }
-    }
-}
+// Use the proper camera system from astraweave-render
 
 // ------------------------------- Input -------------------------------
 
 #[derive(Default)]
 struct InputState {
-    key_w: bool,
-    key_a: bool,
-    key_s: bool,
-    key_d: bool,
-    key_space: bool,
-    key_ctrl: bool,
-    right_mouse: bool,
-    mouse_delta: Vec2,
     scroll_delta: f32,
 }
 
@@ -569,11 +513,18 @@ async fn run() -> Result<()> {
 
     let mut instances = build_show_instances();
     let mut ui = UiState::default();
-    let mut camera = Camera {
-        pos: Vec3::new(0.0, 0.0, 5.0),
+    
+    // Use proper camera system from astraweave-render
+    let mut camera = RenderCamera {
+        position: Vec3::new(0.0, 0.0, 5.0),
         yaw: 0.0,
         pitch: 0.0,
+        fovy: 60f32.to_radians(),
+        aspect: 1.0,
+        znear: 0.01,
+        zfar: 5000.0,
     };
+    let mut camera_controller = CameraController::new(8.0, 0.002);
     let mut input = InputState::default();
     let mut last = Instant::now();
     let mut fps_acc = 0.0;
@@ -601,124 +552,112 @@ async fn run() -> Result<()> {
                     } => {
                         let pressed = state == ElementState::Pressed;
                         match physical_key {
-                            PhysicalKey::Code(KeyCode::KeyW) => input.key_w = pressed,
-                            PhysicalKey::Code(KeyCode::KeyA) => input.key_a = pressed,
-                            PhysicalKey::Code(KeyCode::KeyS) => input.key_s = pressed,
-                            PhysicalKey::Code(KeyCode::KeyD) => input.key_d = pressed,
-                            PhysicalKey::Code(KeyCode::Space) => input.key_space = pressed,
-                            PhysicalKey::Code(KeyCode::ControlLeft)
-                            | PhysicalKey::Code(KeyCode::ControlRight) => input.key_ctrl = pressed,
-                            PhysicalKey::Code(KeyCode::Escape) => {
-                                if pressed {
-                                    elwt_window_target.exit();
-                                }
-                            }
-                            PhysicalKey::Code(KeyCode::KeyP) => {
-                                if pressed {
-                                    ui.physics_paused = !ui.physics_paused;
-                                }
-                            }
-                            PhysicalKey::Code(KeyCode::KeyT) => {
-                                if pressed {
-                                    // Teleport sphere a few meters in front of camera
-                                    let forward = Vec3::new(
-                                        camera.yaw.cos() * camera.pitch.cos(),
-                                        camera.pitch.sin(),
-                                        camera.yaw.sin() * camera.pitch.cos(),
-                                    )
-                                    .normalize();
-                                    let target =
-                                        camera.pos + forward * 4.0 + Vec3::new(0.0, -0.5, 0.0);
-                                    teleport_sphere_to(&mut physics, target);
-                                }
-                            }
-                            PhysicalKey::Code(KeyCode::KeyE) => {
-                                if pressed {
-                                    // Raycast forward and apply impulse to first hit dynamic body
-                                    let forward = Vec3::new(
-                                        camera.yaw.cos() * camera.pitch.cos(),
-                                        camera.pitch.sin(),
-                                        camera.yaw.sin() * camera.pitch.cos(),
-                                    )
-                                    .normalize();
+                            PhysicalKey::Code(code) => {
+                                camera_controller.process_keyboard(code, pressed);
+                                match code {
+                                    KeyCode::Escape => {
+                                        if pressed {
+                                            elwt_window_target.exit();
+                                        }
+                                    }
+                                    KeyCode::KeyP => {
+                                        if pressed {
+                                            ui.physics_paused = !ui.physics_paused;
+                                        }
+                                    }
+                                    KeyCode::KeyT => {
+                                        if pressed {
+                                            // Teleport sphere a few meters in front of camera
+                                            let forward = astraweave_render::camera::Camera::dir(camera.yaw, camera.pitch);
+                                            let target =
+                                                camera.position + forward * 4.0 + Vec3::new(0.0, -0.5, 0.0);
+                                            teleport_sphere_to(&mut physics, target);
+                                        }
+                                    }
+                                    KeyCode::KeyE => {
+                                        if pressed {
+                                            // Raycast forward and apply impulse to first hit dynamic body
+                                            let forward = astraweave_render::camera::Camera::dir(camera.yaw, camera.pitch);
 
-                                    // Create a ray for the query
-                                    let ray_origin = nalgebra::Point3::new(
-                                        camera.pos.x,
-                                        camera.pos.y,
-                                        camera.pos.z,
-                                    );
-                                    let ray_dir =
-                                        nalgebra::Vector3::new(forward.x, forward.y, forward.z);
-                                    let ray = r3::Ray::new(ray_origin, ray_dir);
+                                            // Create a ray for the query
+                                            let ray_origin = nalgebra::Point3::new(
+                                                camera.position.x,
+                                                camera.position.y,
+                                                camera.position.z,
+                                            );
+                                            let ray_dir =
+                                                nalgebra::Vector3::new(forward.x, forward.y, forward.z);
+                                            let ray = r3::Ray::new(ray_origin, ray_dir);
 
-                                    // Update the query pipeline with just the colliders
-                                    physics.query_pipeline.update(&physics.colliders);
+                                            // Update the query pipeline with just the colliders
+                                            physics.query_pipeline.update(&physics.colliders);
 
-                                    // Cast the ray
-                                    if let Some((h, _toi)) = physics.query_pipeline.cast_ray(
-                                        &physics.bodies,
-                                        &physics.colliders,
-                                        &ray,
-                                        15.0,
-                                        true,
-                                        r3::QueryFilter::default(),
-                                    ) {
-                                        if let Some(body) =
-                                            physics.bodies.get_mut(r3::RigidBodyHandle(h.0))
-                                        {
-                                            if !body.is_fixed() {
-                                                let impulse = nalgebra::Vector3::new(
-                                                    forward.x * 3.0,
-                                                    1.0,
-                                                    forward.z * 3.0,
-                                                );
-                                                body.apply_impulse(impulse, true);
+                                            // Cast the ray
+                                            if let Some((h, _toi)) = physics.query_pipeline.cast_ray(
+                                                &physics.bodies,
+                                                &physics.colliders,
+                                                &ray,
+                                                15.0,
+                                                true,
+                                                r3::QueryFilter::default(),
+                                            ) {
+                                                if let Some(body) =
+                                                    physics.bodies.get_mut(r3::RigidBodyHandle(h.0))
+                                                {
+                                                    if !body.is_fixed() {
+                                                        let impulse = nalgebra::Vector3::new(
+                                                            forward.x * 3.0,
+                                                            1.0,
+                                                            forward.z * 3.0,
+                                                        );
+                                                        body.apply_impulse(impulse, true);
+                                                    }
+                                                }
                                             }
                                         }
                                     }
-                                }
-                            }
-                            PhysicalKey::Code(KeyCode::Digit1) => {
-                                if pressed {
-                                    let pack_name = "grassland";
-                                    if let Err(e) = reload_texture_pack(&mut render, pack_name) {
-                                        println!(
-                                            "Failed to switch to {} texture pack: {}",
-                                            pack_name, e
-                                        );
-                                    } else {
-                                        ui.current_texture_pack = pack_name.to_string();
-                                        ui.info_text =
-                                            format!("Switched to {} environment", pack_name);
-                                        generate_environment_objects(&mut physics, pack_name);
+                                    KeyCode::Digit1 => {
+                                        if pressed {
+                                            let pack_name = "grassland";
+                                            if let Err(e) = reload_texture_pack(&mut render, pack_name) {
+                                                println!(
+                                                    "Failed to switch to {} texture pack: {}",
+                                                    pack_name, e
+                                                );
+                                            } else {
+                                                ui.current_texture_pack = pack_name.to_string();
+                                                ui.info_text =
+                                                    format!("Switched to {} environment", pack_name);
+                                                generate_environment_objects(&mut physics, pack_name);
+                                            }
+                                        }
                                     }
-                                }
-                            }
-                            PhysicalKey::Code(KeyCode::Digit2) => {
-                                if pressed {
-                                    let pack_name = "desert";
-                                    if let Err(e) = reload_texture_pack(&mut render, pack_name) {
-                                        println!(
-                                            "Failed to switch to {} texture pack: {}",
-                                            pack_name, e
-                                        );
-                                    } else {
-                                        ui.current_texture_pack = pack_name.to_string();
-                                        ui.info_text =
-                                            format!("Switched to {} environment", pack_name);
-                                        generate_environment_objects(&mut physics, pack_name);
+                                    KeyCode::Digit2 => {
+                                        if pressed {
+                                            let pack_name = "desert";
+                                            if let Err(e) = reload_texture_pack(&mut render, pack_name) {
+                                                println!(
+                                                    "Failed to switch to {} texture pack: {}",
+                                                    pack_name, e
+                                                );
+                                            } else {
+                                                ui.current_texture_pack = pack_name.to_string();
+                                                ui.info_text =
+                                                    format!("Switched to {} environment", pack_name);
+                                                generate_environment_objects(&mut physics, pack_name);
+                                            }
+                                        }
                                     }
+                                    _ => {}
                                 }
-                            }
+                            },
                             _ => {}
                         }
                     }
                     WindowEvent::MouseInput { state, button, .. } => {
+                        camera_controller.process_mouse_button(button, state == ElementState::Pressed);
                         if button == winit::event::MouseButton::Right {
                             let pressed = state == ElementState::Pressed;
-                            input.right_mouse = pressed;
-                            input.mouse_delta = Vec2::ZERO;
                             // Grab or release cursor for reliable deltas
                             if pressed {
                                 let _ = window.set_cursor_grab(CursorGrabMode::Locked);
@@ -763,21 +702,19 @@ async fn run() -> Result<()> {
                             fps_cnt = 0;
                         }
 
-                        // Look (gated on right mouse)
-                        if input.right_mouse {
-                            camera.yaw -= input.mouse_delta.x * 0.0025;
-                            camera.pitch -= input.mouse_delta.y * 0.0020;
-                            camera.pitch = camera.pitch.clamp(-1.4, 1.4);
-                        }
-                        input.mouse_delta = Vec2::ZERO;
-
+                        // Update camera
+                        camera.aspect = (render.surface_cfg.width as f32 * ui.resolution_scale).max(1.0) / 
+                                      (render.surface_cfg.height as f32 * ui.resolution_scale).max(1.0);
+                        
                         // Adjust camera speed via scroll
                         if input.scroll_delta.abs() > 0.1 {
-                            ui.camera_speed =
-                                (ui.camera_speed + input.scroll_delta).clamp(1.0, 50.0);
+                            camera_controller.speed = (camera_controller.speed + input.scroll_delta).clamp(1.0, 50.0);
+                            ui.camera_speed = camera_controller.speed;
                             input.scroll_delta = 0.0;
                         }
-                        camera.handle_inputs(dt.as_secs_f32(), &input, ui.camera_speed);
+                        
+                        // Update camera with controller
+                        camera_controller.update_camera(&mut camera, dt.as_secs_f32());
 
                         // Physics
                         if !ui.physics_paused {
@@ -797,15 +734,8 @@ async fn run() -> Result<()> {
                         }
 
                         // Camera uniform
-                        let width =
-                            (render.surface_cfg.width as f32 * ui.resolution_scale).max(1.0);
-                        let height =
-                            (render.surface_cfg.height as f32 * ui.resolution_scale).max(1.0);
-                        let proj =
-                            Mat4::perspective_rh(60f32.to_radians(), width / height, 0.01, 5000.0);
-                        let view = camera.view_matrix();
                         let cam = GpuCamera {
-                            view_proj: (proj * view).to_cols_array(),
+                            view_proj: camera.vp().to_cols_array(),
                         };
                         render
                             .queue
@@ -891,9 +821,9 @@ async fn run() -> Result<()> {
                 event: DeviceEvent::MouseMotion { delta },
                 ..
             } => {
-                // accumulate mouse delta for look
-                input.mouse_delta.x += delta.0 as f32;
-                input.mouse_delta.y += delta.1 as f32;
+                // Use proper mouse position handling for camera controller
+                let pos = Vec2::new(delta.0 as f32, delta.1 as f32);
+                camera_controller.process_mouse_move(&mut camera, pos);
             }
             _ => {}
         }

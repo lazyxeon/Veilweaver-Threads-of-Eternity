@@ -24,7 +24,7 @@ impl Camera {
         self.proj_matrix() * self.view_matrix()
     }
 
-    fn dir(yaw: f32, pitch: f32) -> Vec3 {
+    pub fn dir(yaw: f32, pitch: f32) -> Vec3 {
         let cy = yaw.cos();
         let sy = yaw.sin();
         let cp = pitch.cos();
