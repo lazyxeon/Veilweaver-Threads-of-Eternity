@@ -59,6 +59,7 @@ const DEPTH_FORMAT: wgpu::TextureFormat = wgpu::TextureFormat::Depth24Plus;
 // ------------------------------- Texture Pack System -------------------------------
 
 #[derive(Debug, Deserialize)]
+#[allow(dead_code)] // Configuration struct - fields may be used in future iterations
 struct TexturePack {
     name: String,
     description: String,
@@ -69,6 +70,7 @@ struct TexturePack {
 }
 
 #[derive(Debug, Deserialize)]
+#[allow(dead_code)] // Configuration struct - fields may be used in future iterations
 struct GroundConfig {
     texture: String,
     scale: f32,
@@ -76,11 +78,13 @@ struct GroundConfig {
 }
 
 #[derive(Debug, Deserialize)]
+#[allow(dead_code)] // Configuration struct - fields may be used in future iterations
 struct StructuresConfig {
     buildings: Vec<BuildingConfig>,
 }
 
 #[derive(Debug, Deserialize)]
+#[allow(dead_code)] // Configuration struct - fields may be used in future iterations
 struct BuildingConfig {
     #[serde(rename = "type")]
     building_type: String,
@@ -91,6 +95,7 @@ struct BuildingConfig {
 }
 
 #[derive(Debug, Deserialize)]
+#[allow(dead_code)] // Configuration struct - fields may be used in future iterations
 struct SkyConfig {
     horizon_color: [f32; 3],
     zenith_color: [f32; 3],
@@ -98,6 +103,7 @@ struct SkyConfig {
 }
 
 #[derive(Debug, Deserialize)]
+#[allow(dead_code)] // Configuration struct - fields may be used in future iterations
 struct AmbientConfig {
     light_color: [f32; 3],
     light_intensity: f32,
@@ -106,6 +112,7 @@ struct AmbientConfig {
 }
 
 struct LoadedTexture {
+    #[allow(dead_code)] // Texture handle kept for resource management
     texture: wgpu::Texture,
     view: wgpu::TextureView,
     sampler: wgpu::Sampler,
@@ -136,6 +143,7 @@ const CUBE_INDICES: &[u16] = &[
 
 // ------------------------------- Egui wiring -------------------------------
 
+#[allow(dead_code)] // UI state fields may be used in future iterations
 struct UiState {
     show_grid: bool,
     show_navmesh: bool,
@@ -242,6 +250,7 @@ struct Physics {
     integration_params: r3::IntegrationParameters,
 }
 
+#[allow(dead_code)] // Type alias may be used in future iterations  
 type Real = f32;
 
 // ------------------------------- Texture Pack Loading -------------------------------
@@ -505,7 +514,7 @@ async fn run() -> Result<()> {
     let mut fps_cnt = 0u32;
 
     let elwt = event_loop;
-    elwt.run(move |event, elwt_window_target| {
+    let _ = elwt.run(move |event, elwt_window_target| {
         elwt_window_target.set_control_flow(winit::event_loop::ControlFlow::Poll);
         match event {
             Event::WindowEvent { event: win_event, .. } => {
@@ -746,6 +755,70 @@ async fn run() -> Result<()> {
     Ok(())
 }
 
+// ---------------- Helper functions for default textures ----------------
+
+fn create_default_albedo_texture(device: &wgpu::Device, queue: &wgpu::Queue) -> Result<LoadedTexture> {
+    let white_texture = device.create_texture(&wgpu::TextureDescriptor {
+        label: Some("default-white"),
+        size: wgpu::Extent3d { width: 1, height: 1, depth_or_array_layers: 1 },
+        mip_level_count: 1,
+        sample_count: 1,
+        dimension: wgpu::TextureDimension::D2,
+        format: wgpu::TextureFormat::Rgba8UnormSrgb,
+        usage: wgpu::TextureUsages::TEXTURE_BINDING | wgpu::TextureUsages::COPY_DST,
+        view_formats: &[],
+    });
+    queue.write_texture(
+        wgpu::ImageCopyTexture {
+            texture: &white_texture,
+            mip_level: 0,
+            origin: wgpu::Origin3d::ZERO,
+            aspect: wgpu::TextureAspect::All,
+        },
+        &[255, 255, 255, 255], // RGBA white
+        wgpu::ImageDataLayout {
+            offset: 0,
+            bytes_per_row: Some(4),
+            rows_per_image: Some(1),
+        },
+        wgpu::Extent3d { width: 1, height: 1, depth_or_array_layers: 1 },
+    );
+    let view = white_texture.create_view(&wgpu::TextureViewDescriptor::default());
+    let sampler = device.create_sampler(&wgpu::SamplerDescriptor::default());
+    Ok(LoadedTexture { texture: white_texture, view, sampler })
+}
+
+fn create_default_normal_texture(device: &wgpu::Device, queue: &wgpu::Queue) -> Result<LoadedTexture> {
+    let normal_texture = device.create_texture(&wgpu::TextureDescriptor {
+        label: Some("default-normal"),
+        size: wgpu::Extent3d { width: 1, height: 1, depth_or_array_layers: 1 },
+        mip_level_count: 1,
+        sample_count: 1,
+        dimension: wgpu::TextureDimension::D2,
+        format: wgpu::TextureFormat::Rgba8UnormSrgb,
+        usage: wgpu::TextureUsages::TEXTURE_BINDING | wgpu::TextureUsages::COPY_DST,
+        view_formats: &[],
+    });
+    queue.write_texture(
+        wgpu::ImageCopyTexture {
+            texture: &normal_texture,
+            mip_level: 0,
+            origin: wgpu::Origin3d::ZERO,
+            aspect: wgpu::TextureAspect::All,
+        },
+        &[128, 128, 255, 255], // Default normal pointing up (0, 0, 1) in normal map encoding
+        wgpu::ImageDataLayout {
+            offset: 0,
+            bytes_per_row: Some(4),
+            rows_per_image: Some(1),
+        },
+        wgpu::Extent3d { width: 1, height: 1, depth_or_array_layers: 1 },
+    );
+    let view = normal_texture.create_view(&wgpu::TextureViewDescriptor::default());
+    let sampler = device.create_sampler(&wgpu::SamplerDescriptor::default());
+    Ok(LoadedTexture { texture: normal_texture, view, sampler })
+}
+
 // ---------------- renderer setup ----------------
 async fn setup_renderer(window: std::sync::Arc<winit::window::Window>) -> Result<RenderStuff> {
     let size = window.inner_size();
@@ -863,8 +936,14 @@ async fn setup_renderer(window: std::sync::Arc<winit::window::Window>) -> Result
     });
 
     // Try to load grass texture, fallback to default if not available
-    let (ground_texture, ground_bind_group) = match load_texture_from_file(&device, &queue, Path::new("assets/grass.png")) {
+    let (ground_texture, ground_normal, ground_bind_group) = match load_texture_from_file(&device, &queue, Path::new("assets/grass.png")) {
         Ok(texture) => {
+            // Try to load corresponding normal map
+            let normal_texture = match load_texture_from_file(&device, &queue, Path::new("assets/grass_n.png")) {
+                Ok(normal) => normal,
+                Err(_) => create_default_normal_texture(&device, &queue)?,
+            };
+            
             let bind_group = device.create_bind_group(&wgpu::BindGroupDescriptor {
                 label: Some("ground-texture-bg"),
                 layout: &texture_bind_group_layout,
@@ -877,40 +956,22 @@ async fn setup_renderer(window: std::sync::Arc<winit::window::Window>) -> Result
                         binding: 1,
                         resource: wgpu::BindingResource::Sampler(&texture.sampler),
                     },
+                    wgpu::BindGroupEntry {
+                        binding: 2,
+                        resource: wgpu::BindingResource::TextureView(&normal_texture.view),
+                    },
+                    wgpu::BindGroupEntry {
+                        binding: 3,
+                        resource: wgpu::BindingResource::Sampler(&normal_texture.sampler),
+                    },
                 ],
             });
-            (Some(texture), Some(bind_group))
+            (Some(texture), Some(normal_texture), Some(bind_group))
         }
         Err(_) => {
-            // Create a default 1x1 white texture as fallback
-            let white_texture = device.create_texture(&wgpu::TextureDescriptor {
-                label: Some("default-white"),
-                size: wgpu::Extent3d { width: 1, height: 1, depth_or_array_layers: 1 },
-                mip_level_count: 1,
-                sample_count: 1,
-                dimension: wgpu::TextureDimension::D2,
-                format: wgpu::TextureFormat::Rgba8UnormSrgb,
-                usage: wgpu::TextureUsages::TEXTURE_BINDING | wgpu::TextureUsages::COPY_DST,
-                view_formats: &[],
-            });
-            queue.write_texture(
-                wgpu::ImageCopyTexture {
-                    texture: &white_texture,
-                    mip_level: 0,
-                    origin: wgpu::Origin3d::ZERO,
-                    aspect: wgpu::TextureAspect::All,
-                },
-                &[255, 255, 255, 255], // RGBA white
-                wgpu::ImageDataLayout {
-                    offset: 0,
-                    bytes_per_row: Some(4),
-                    rows_per_image: Some(1),
-                },
-                wgpu::Extent3d { width: 1, height: 1, depth_or_array_layers: 1 },
-            );
-            let view = white_texture.create_view(&wgpu::TextureViewDescriptor::default());
-            let sampler = device.create_sampler(&wgpu::SamplerDescriptor::default());
-            let loaded_texture = LoadedTexture { texture: white_texture, view, sampler };
+            // Create default textures as fallback
+            let default_albedo = create_default_albedo_texture(&device, &queue)?;
+            let default_normal = create_default_normal_texture(&device, &queue)?;
             
             let bind_group = device.create_bind_group(&wgpu::BindGroupDescriptor {
                 label: Some("default-texture-bg"),
@@ -918,15 +979,23 @@ async fn setup_renderer(window: std::sync::Arc<winit::window::Window>) -> Result
                 entries: &[
                     wgpu::BindGroupEntry {
                         binding: 0,
-                        resource: wgpu::BindingResource::TextureView(&loaded_texture.view),
+                        resource: wgpu::BindingResource::TextureView(&default_albedo.view),
                     },
                     wgpu::BindGroupEntry {
                         binding: 1,
-                        resource: wgpu::BindingResource::Sampler(&loaded_texture.sampler),
+                        resource: wgpu::BindingResource::Sampler(&default_albedo.sampler),
+                    },
+                    wgpu::BindGroupEntry {
+                        binding: 2,
+                        resource: wgpu::BindingResource::TextureView(&default_normal.view),
+                    },
+                    wgpu::BindGroupEntry {
+                        binding: 3,
+                        resource: wgpu::BindingResource::Sampler(&default_normal.sampler),
                     },
                 ],
             });
-            (Some(loaded_texture), Some(bind_group))
+            (Some(default_albedo), Some(default_normal), Some(bind_group))
         }
     };
 
@@ -1053,7 +1122,7 @@ async fn setup_renderer(window: std::sync::Arc<winit::window::Window>) -> Result
         ground_texture,
         texture_bind_group_layout,
         ground_bind_group,
-        ground_normal: None,
+        ground_normal,
     })
 }
 
@@ -1079,6 +1148,8 @@ struct Camera { view_proj: mat4x4<f32> };
 
 @group(1) @binding(0) var ground_texture: texture_2d<f32>;
 @group(1) @binding(1) var ground_sampler: sampler;
+@group(1) @binding(2) var ground_normal: texture_2d<f32>;
+@group(1) @binding(3) var normal_sampler: sampler;
 
 struct VsIn {
   @location(0) pos: vec3<f32>,
@@ -1123,13 +1194,22 @@ fn fs_main(in: VsOut) -> @location(0) vec4<f32> {
     let uv = vec2<f32>(in.world_pos.x / scale, in.world_pos.z / scale);
     let tex_color = textureSample(ground_texture, ground_sampler, uv).rgb;
     
+    // Sample normal map for enhanced surface detail
+    let normal_sample = textureSample(ground_normal, normal_sampler, uv).rgb;
+    let normal = normalize(normal_sample * 2.0 - 1.0); // Convert from [0,1] to [-1,1]
+    
+    // Simple lighting calculation using the normal
+    let light_dir = normalize(vec3<f32>(0.5, 1.0, 0.3));
+    let ndotl = max(dot(normal, light_dir), 0.0);
+    let lighting = 0.3 + 0.7 * ndotl; // Ambient + diffuse
+    
     // Mix with a slight checkerboard pattern for variation
     let checker_scale = 1.5;
     let cx = floor(in.world_pos.x / checker_scale);
     let cz = floor(in.world_pos.z / checker_scale);
     let checker = f32((i32(cx + cz) & 1)) * 0.1;
     
-    col = tex_color * (0.9 + checker);
+    col = tex_color * lighting * (0.9 + checker);
   }
   
   // Sky ambient lighting
