@@ -202,7 +202,7 @@ async fn run() -> Result<()> {
     let mut fps_cnt = 0u32;
 
     let elwt = event_loop;
-    let _ = elwt.run(move |event, elwt_window_target| {
+    elwt.run(move |event, elwt_window_target| {
         elwt_window_target.set_control_flow(winit::event_loop::ControlFlow::Poll);
         match event {
             Event::WindowEvent { event: win_event, .. } => {
