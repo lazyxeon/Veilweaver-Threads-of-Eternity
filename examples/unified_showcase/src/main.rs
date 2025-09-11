@@ -1771,16 +1771,15 @@ fn sync_instances_from_physics(p: &Physics, characters: &[Character], out: &mut 
 
     // Add physics objects
     for (_, body) in p.bodies.iter() {
-        if body.is_fixed() && body.user_data == 0 {
-            continue; // Skip ground
-        }
+        // No skipping — we want the ground cube drawn so the ground shader branch runs.
 
         let xf = body.position();
         let iso = xf.to_homogeneous();
         let m = Mat4::from_cols_array_2d(&iso.fixed_view::<4, 4>(0, 0).into());
 
-        // Color based on object type (user_data) with enhanced variety
+        // Color based on object type; give ground a neutral tint
         let color = match body.user_data {
+            0 => [0.95, 0.95, 0.95, 1.0],    // Ground
             1 => [0.9, 0.6, 0.2, 1.0],       // Original boxes (orange)
             2 => [0.1, 0.8, 0.9, 1.0],       // Sphere (cyan)
             10..=19 => [0.2, 0.8, 0.3, 1.0], // Trees (green)
