@@ -10,5 +10,6 @@ wgpu = { workspace = true }
 winit = { workspace = true }
 glam = { workspace = true }
 pollster = { workspace = true }
+image = "0.25"
 astraweave-core = { path = "../../astraweave-core" }
 astraweave-render = { path = "../../astraweave-render" }
