@@ -1734,6 +1734,7 @@ fn build_physics_world() -> Physics {
     // Ground
     let ground = r3::RigidBodyBuilder::fixed()
         .translation(nalgebra::Vector3::new(0.0, -2.0, 0.0))
+        .user_data(0)
         .build();
     let g_handle = bodies.insert(ground);
     let g_col = r3::ColliderBuilder::cuboid(100.0, 0.5, 100.0).build();
